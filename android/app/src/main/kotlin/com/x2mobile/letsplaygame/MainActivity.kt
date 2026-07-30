@@ -1,4 +1,4 @@
-package com.x2mobile.letsplaylanguage
+package com.x2mobile.letsplaygame
 
 import io.flutter.embedding.android.FlutterActivity
 

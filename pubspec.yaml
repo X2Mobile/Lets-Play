@@ -1,0 +1,53 @@
+name: lets_play
+description: "LET'S PLAY! (يلا نلعب) — gamified Arabic literacy for kids. Concept MVP demo, fully offline."
+publish_to: 'none'
+
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.2
+  audioplayers: ^6.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/logo/
+    - assets/audio/
+
+  fonts:
+    - family: NotoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansArabic-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansArabic-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/NotoSansArabic-ExtraBold.ttf
+          weight: 800
+    - family: BalooBhaijaan2
+      fonts:
+        - asset: assets/fonts/baloo-bhaijaan-2-v21-arabic_latin-regular.ttf
+          weight: 400
+        - asset: assets/fonts/baloo-bhaijaan-2-v21-arabic_latin-500.ttf
+          weight: 500
+        - asset: assets/fonts/baloo-bhaijaan-2-v21-arabic_latin-600.ttf
+          weight: 600
+        - asset: assets/fonts/baloo-bhaijaan-2-v21-arabic_latin-700.ttf
+          weight: 700
+        - asset: assets/fonts/baloo-bhaijaan-2-v21-arabic_latin-800.ttf
+          weight: 800

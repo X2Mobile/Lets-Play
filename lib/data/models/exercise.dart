@@ -93,7 +93,6 @@ final class BuildLetterExercise extends Exercise {
     this.formTabs = const <String>[],
     this.activeFormIndex = 0,
     this.guideLabel,
-    this.successToast = false,
   });
 
   final int gridColumns;
@@ -113,10 +112,6 @@ final class BuildLetterExercise extends Exercise {
   /// Draws a dotted green guide line under the board with this label
   /// (`Baseline`, `Ascender`).
   final String? guideLabel;
-
-  /// Shows the "Awesome! You nailed it!" banner on completion. Only where
-  /// the design has it (LEVEL 2/8, LEVEL 3/6) — Level 1 advances silently.
-  final bool successToast;
 }
 
 /// 3. The letter is shown built from bricks; the child drags a finger along

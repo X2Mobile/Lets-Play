@@ -134,9 +134,6 @@ class _PlaceDiacriticPageState extends State<PlaceDiacriticPage> {
   @override
   Widget build(BuildContext context) {
     final exercise = widget.exercise;
-    final lightText =
-        ThemeData.estimateBrightnessForColor(widget.levelColor) ==
-        Brightness.dark;
     return Column(
       children: <Widget>[
         const SizedBox(height: 8),
@@ -165,7 +162,7 @@ class _PlaceDiacriticPageState extends State<PlaceDiacriticPage> {
                 style: LpTextStyles.arabicGiant.copyWith(
                   fontSize: 110,
                   height: 1.1,
-                  color: lightText ? LpColors.bgWhite : LpColors.ink,
+                  color: LpColors.foregroundOn(widget.levelColor),
                 ),
               ),
               _slot(above: false),

@@ -100,14 +100,11 @@ class _LessonFlowScreenState extends State<LessonFlowScreen> {
     });
   }
 
-  /// Build completion: show the "Awesome!" banner only where the design has
-  /// it (exercise.successToast), otherwise advance directly.
+  /// Completion of a brick build: celebrate with the "Awesome!" banner in
+  /// the level color, then advance. Traces advance directly.
   void _advanceWithToast() {
     if (_toastVisible) return;
-    final exercise = _exercises[_index];
-    final wantsToast =
-        exercise is BuildLetterExercise && exercise.successToast;
-    if (!wantsToast) {
+    if (_exercises[_index] is! BuildLetterExercise) {
       _advance();
       return;
     }
@@ -302,12 +299,16 @@ class _SuccessToast extends StatelessWidget {
               Text(
                 LessonStrings.toastTitle,
                 textAlign: TextAlign.center,
-                style: LpTextStyles.h2.copyWith(color: LpColors.bgWhite),
+                style: LpTextStyles.h2.copyWith(
+                  color: LpColors.foregroundOn(color),
+                ),
               ),
               Text(
                 LessonStrings.toastSubtitle,
                 textAlign: TextAlign.center,
-                style: LpTextStyles.body.copyWith(color: LpColors.bgWhite),
+                style: LpTextStyles.body.copyWith(
+                  color: LpColors.foregroundOn(color),
+                ),
               ),
             ],
           ),

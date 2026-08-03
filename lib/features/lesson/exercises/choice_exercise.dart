@@ -151,9 +151,7 @@ class _PromptCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = prompt.cardColor ?? levelColor;
-    final lightText =
-        ThemeData.estimateBrightnessForColor(color) == Brightness.dark;
-    final textColor = lightText ? LpColors.bgWhite : LpColors.ink;
+    final textColor = LpColors.foregroundOn(color);
 
     Widget? content;
     if (prompt.brickCount != null) {

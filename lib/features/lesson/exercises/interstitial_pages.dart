@@ -33,8 +33,6 @@ class TutorialPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lightText =
-        ThemeData.estimateBrightnessForColor(levelColor) == Brightness.dark;
     return Container(
       color: levelColor,
       child: SafeArea(
@@ -42,7 +40,7 @@ class TutorialPage extends StatelessWidget {
           children: <Widget>[
             _InterstitialCloseButton(
               onClose: onClose,
-              color: lightText ? LpColors.bgWhite : LpColors.ink,
+              color: LpColors.foregroundOn(levelColor),
             ),
             const Spacer(),
             Expanded(
@@ -161,9 +159,7 @@ class CheckpointPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lightText =
-        ThemeData.estimateBrightnessForColor(levelColor) == Brightness.dark;
-    final onColor = lightText ? LpColors.bgWhite : LpColors.ink;
+    final onColor = LpColors.foregroundOn(levelColor);
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

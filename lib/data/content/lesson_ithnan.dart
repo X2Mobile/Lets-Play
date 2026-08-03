@@ -42,7 +42,6 @@ const Lesson lessonIthnan = Lesson(
       ],
       timerSeconds: 30,
       maxMoves: 10,
-      successToast: true,
     ),
     TeachCardExercise(
       titleArabic: 'اثنان',

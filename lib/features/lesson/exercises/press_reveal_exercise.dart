@@ -61,10 +61,7 @@ class _PressRevealPageState extends State<PressRevealPage> {
   @override
   Widget build(BuildContext context) {
     final exercise = widget.exercise;
-    final lightText =
-        ThemeData.estimateBrightnessForColor(widget.levelColor) ==
-        Brightness.dark;
-    final textColor = lightText ? LpColors.bgWhite : LpColors.ink;
+    final textColor = LpColors.foregroundOn(widget.levelColor);
     return Column(
       children: <Widget>[
         const Spacer(),

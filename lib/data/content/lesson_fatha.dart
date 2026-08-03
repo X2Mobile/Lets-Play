@@ -45,7 +45,6 @@ const Lesson lessonFatha = Lesson(
       timerSeconds: 30,
       maxMoves: 10,
       guideLabel: 'Ascender',
-      successToast: true,
     ),
     TeachCardExercise(
       titleArabic: 'فتحه',

@@ -53,9 +53,7 @@ class _TeachCardPageState extends State<TeachCardPage> {
   Widget build(BuildContext context) {
     final exercise = widget.exercise;
     final color = exercise.cardColor ?? widget.levelColor;
-    final lightText =
-        ThemeData.estimateBrightnessForColor(color) == Brightness.dark;
-    final textColor = lightText ? LpColors.bgWhite : LpColors.ink;
+    final textColor = LpColors.foregroundOn(color);
 
     return Column(
       children: <Widget>[

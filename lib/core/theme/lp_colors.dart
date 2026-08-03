@@ -77,6 +77,13 @@ abstract final class LpColors {
     purple,
   ];
 
+  /// Foreground for text/icons sitting on a level color: white everywhere
+  /// except the yellows (Level 1), which need ink — the brand rule from the
+  /// design, NOT a computed brightness (orange/blue read as "bright" to
+  /// estimators but the design still puts white on them).
+  static Color foregroundOn(Color color) =>
+      color == brandYellow || color == splashYellow ? ink : bgWhite;
+
   /// Shifts [color] towards black — used for brick bottom edges & stud rings.
   static Color darken(Color color, [double amount = 0.2]) =>
       Color.lerp(color, const Color(0xFF000000), amount)!;

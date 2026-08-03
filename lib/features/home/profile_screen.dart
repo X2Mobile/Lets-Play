@@ -7,98 +7,160 @@ import '../../core/widgets/lp_card.dart';
 import '../../core/widgets/lp_icons.dart';
 import '../../data/content/placeholders_content.dart';
 import '../../state/app_state.dart';
+import 'settings_screen.dart';
 
-/// Polished on-brand Profile placeholder (stats come from live app state).
+/// Profile per the design (`PROFILE /1`): avatar + Malak + joined date,
+/// Following/Followers, three colored Statistics cards (live app state),
+/// Review Progress and Find-your-Friends rows.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  static void _showSnack(BuildContext context) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text(profileComingSoonSnack)));
+  }
 
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
     return SafeArea(
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
         children: <Widget>[
-          const Row(
+          Row(
             children: <Widget>[
-              SmileyIcon(size: 32),
-              SizedBox(width: 10),
-              Text(profileTitle, style: LpTextStyles.h1),
+              const Spacer(),
+              const Padding(
+                padding: EdgeInsets.only(left: 30),
+                child: Text(profileTitle, style: LpTextStyles.h1),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const SettingsScreen(),
+                  ),
+                ),
+                child: const GearIcon(size: 30),
+              ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           Center(
             child: Container(
-              width: 108,
-              height: 108,
-              alignment: Alignment.center,
+              width: 112,
+              height: 112,
               decoration: BoxDecoration(
-                color: LpColors.bgWhite,
                 shape: BoxShape.circle,
                 border: Border.all(color: LpColors.ink, width: 3),
                 boxShadow: const <BoxShadow>[
                   BoxShadow(color: LpColors.ink, offset: Offset(0, 4)),
                 ],
               ),
-              child: const SmileyIcon(size: 74),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/illustrations/avatar.png',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => const Center(
+                    child: SmileyIcon(size: 74),
+                  ),
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 14),
           const Center(child: Text(profileName, style: LpTextStyles.h1)),
-          Center(child: Text(profileSubtitle, style: LpTextStyles.caption)),
-          const SizedBox(height: 24),
+          const Center(
+            child: Text(profileJoined, style: LpTextStyles.caption),
+          ),
+          const SizedBox(height: 18),
           Row(
-            children: <Widget>[
+            children: const <Widget>[
               Expanded(
-                child: _StatCard(
-                  icon: const SparkleIcon(size: 26),
-                  value: '${appState.xp}',
-                  label: profileXpLabel,
+                child: _QuietStat(
+                  value: profileFollowingValue,
+                  label: profileFollowingLabel,
                 ),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: 14),
               Expanded(
-                child: _StatCard(
-                  icon: const HeartIcon(size: 26),
-                  value: '${appState.hearts}',
-                  label: profileHeartsLabel,
+                child: _QuietStat(
+                  value: profileFollowersValue,
+                  label: profileFollowersLabel,
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 26),
+          const Center(
+            child: Text(profileStatisticsTitle, style: LpTextStyles.h2),
           ),
           const SizedBox(height: 14),
           Row(
             children: <Widget>[
               Expanded(
                 child: _StatCard(
-                  icon: const BoltIcon(size: 26),
+                  color: LpColors.levelBlue,
+                  icon: const BoltIcon(size: 30),
                   value: '${appState.energy}',
-                  label: profileEnergyLabel,
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 12),
               Expanded(
-                child: const _StatCard(
-                  icon: Text('🔥', style: TextStyle(fontSize: 22)),
-                  value: profileStreakValue,
-                  label: profileStreakLabel,
+                child: _StatCard(
+                  color: LpColors.levelOrange,
+                  icon: const HeartIcon(size: 30),
+                  value: '${appState.hearts}',
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _StatCard(
+                  color: LpColors.levelPurple,
+                  icon: const SparkleIcon(size: 30),
+                  value: '${appState.xp}',
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-            decoration: BoxDecoration(
-              color: LpColors.tileGray,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: LpColors.borderGray),
-            ),
-            child: Text(
-              profileFooter,
-              textAlign: TextAlign.center,
-              style: LpTextStyles.body.copyWith(color: LpColors.textGray),
-            ),
+          const SizedBox(height: 26),
+          const Center(
+            child: Text(profileReviewTitle, style: LpTextStyles.h2),
+          ),
+          const SizedBox(height: 14),
+          _QuietRow(
+            customEmoji: '🎯',
+            label: profileMistakesLabel,
+            onTap: () => _showSnack(context),
+          ),
+          const SizedBox(height: 12),
+          _QuietRow(
+            customEmoji: '📝',
+            label: profileQuickQuizLabel,
+            onTap: () => _showSnack(context),
+          ),
+          const SizedBox(height: 26),
+          const Center(
+            child: Text(profileFriendsTitle, style: LpTextStyles.h2),
+          ),
+          const SizedBox(height: 14),
+          _QuietRow(
+            customEmoji: '📷',
+            label: profileConnectInstagram,
+            onTap: () => _showSnack(context),
+          ),
+          const SizedBox(height: 12),
+          _QuietRow(
+            customEmoji: '✉',
+            label: profileInviteFriends,
+            onTap: () => _showSnack(context),
+          ),
+          const SizedBox(height: 12),
+          _QuietRow(
+            customEmoji: '👥',
+            label: profileConnectContacts,
+            onTap: () => _showSnack(context),
           ),
         ],
       ),
@@ -106,46 +168,100 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({
-    required this.icon,
-    required this.value,
-    required this.label,
-  });
+/// Quiet gray value/label card (Following / Followers).
+class _QuietStat extends StatelessWidget {
+  const _QuietStat({required this.value, required this.label});
 
-  final Widget icon;
   final String value;
   final String label;
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        color: LpColors.tileGray,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: LpColors.borderGray),
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(value, style: LpTextStyles.title),
+          Text(label, style: LpTextStyles.caption),
+        ],
+      ),
+    );
+  }
+}
+
+/// Colored statistics card (blue energy / orange hearts / purple points).
+class _StatCard extends StatelessWidget {
+  const _StatCard({
+    required this.color,
+    required this.icon,
+    required this.value,
+  });
+
+  final Color color;
+  final Widget icon;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
     return LpCard(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      shadowOffset: const Offset(0, 3),
-      child: Row(
+      color: color,
+      borderWidth: 2.5,
+      shadowOffset: const Offset(0, 4),
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
         children: <Widget>[
           icon,
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  value,
-                  style: LpTextStyles.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  label,
-                  style: LpTextStyles.caption.copyWith(fontSize: 12),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: LpTextStyles.title.copyWith(color: LpColors.bgWhite),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Quiet gray tappable row with a leading emoji tile.
+class _QuietRow extends StatelessWidget {
+  const _QuietRow({
+    required this.customEmoji,
+    required this.label,
+    required this.onTap,
+  });
+
+  final String customEmoji;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: LpColors.tileGray,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: LpColors.borderGray),
+        ),
+        child: Row(
+          children: <Widget>[
+            Text(customEmoji, style: const TextStyle(fontSize: 22)),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: LpTextStyles.body.copyWith(fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
       ),
     );
   }

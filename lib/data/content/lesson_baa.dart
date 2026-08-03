@@ -12,6 +12,20 @@ const Lesson lessonBaa = Lesson(
   letterId: 'baa',
   titleArabic: 'ب',
   titleLatin: 'Baa',
+  levelNumber: 1,
+  lessonNumber: 2,
+  levelColor: LpColors.brandYellow,
+  introChecklist: <String>[
+    'Forming the letter',
+    'Writing the letter',
+    'Letter inside words',
+    'Letter medials',
+  ],
+  introCharacterAsset: 'characters/intro_l1.png',
+  countdownCharacterAsset: 'characters/countdown_l1.png',
+  pointsReward: 5000,
+  accuracyLabel: '90%',
+  speedLabel: '1:00',
   exercises: <Exercise>[
     LetterIntroExercise(
       glyph: 'ب',
@@ -40,6 +54,9 @@ const Lesson lessonBaa = Lesson(
       ],
       timerSeconds: 30,
       maxMoves: 10,
+      formTabs: <String>['بـ', 'ـبـ', 'ب'],
+      activeFormIndex: 2,
+      guideLabel: 'Baseline',
     ),
     TraceLetterExercise(
       gridColumns: 8,

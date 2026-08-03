@@ -7,11 +7,14 @@ import '../../core/widgets/lp_card.dart';
 import '../../core/widgets/option_tile.dart';
 import '../../core/widgets/stud_progress_bar.dart';
 import '../../data/content/onboarding_content.dart';
+import '../../data/models/onboarding_question.dart';
 import '../../state/app_state.dart';
-import 'plan_loading_screen.dart';
+import 'onboarding_extras.dart';
 
-/// "Tell us about yourself" — yellow question card + gray option tiles;
-/// picking an option flashes it yellow and advances after ~350 ms.
+/// "Tell us about yourself" (design LOG IN/7–10) — colored question banner
+/// per step + option tiles (2-column illustrated grid for the motivation
+/// step); picking an option flashes it and advances after ~350 ms. After
+/// the last question → LetsPlay+ upsell → accomplish → placement.
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -33,13 +36,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
     context.read<AppState>().answerOnboarding(
       question.id,
-      question.options[index],
+      question.options[index].label,
     );
     Future<void>.delayed(const Duration(milliseconds: 350), () {
       if (!mounted) return;
       if (_step >= onboardingContent.length - 1) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute<void>(builder: (_) => const PlanLoadingScreen()),
+          MaterialPageRoute<void>(builder: (_) => const UpsellScreen()),
         );
         return;
       }
@@ -62,6 +65,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       Navigator.of(context).maybePop();
     }
   }
+
+  OptionTileStatus _statusFor(int index) => _selectedOption == index
+      ? OptionTileStatus.selected
+      : OptionTileStatus.idle;
 
   @override
   Widget build(BuildContext context) {
@@ -118,28 +125,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       LpCard(
-                        color: LpColors.brandYellow,
+                        color: question.bannerColor,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 22,
                         ),
-                        child: Text(question.question, style: LpTextStyles.h2),
+                        child: Text(
+                          question.question,
+                          style: LpTextStyles.h2.copyWith(
+                            color: question.darkBannerText
+                                ? LpColors.ink
+                                : LpColors.bgWhite,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 26),
-                      for (
-                        var i = 0;
-                        i < question.options.length;
-                        i++
-                      ) ...<Widget>[
-                        OptionTile(
-                          status: _selectedOption == i
-                              ? OptionTileStatus.selected
-                              : OptionTileStatus.idle,
-                          label: question.options[i],
-                          onTap: () => _onOptionTap(i),
-                        ),
-                        const SizedBox(height: 14),
-                      ],
+                      if (question.twoColumns)
+                        _IllustratedGrid(
+                          question: question,
+                          statusFor: _statusFor,
+                          onTap: _onOptionTap,
+                        )
+                      else
+                        for (
+                          var i = 0;
+                          i < question.options.length;
+                          i++
+                        ) ...<Widget>[
+                          OptionTile(
+                            status: _statusFor(i),
+                            onTap: () => _onOptionTap(i),
+                            child: _OptionRow(option: question.options[i]),
+                          ),
+                          const SizedBox(height: 14),
+                        ],
                     ],
                   ),
                 ),
@@ -148,6 +167,89 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// "min/day — intensity" row (design LOG IN/9) or a plain label.
+class _OptionRow extends StatelessWidget {
+  const _OptionRow({required this.option});
+
+  final OnboardingOption option;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = Text(
+      option.label,
+      style: LpTextStyles.body.copyWith(fontWeight: FontWeight.w700),
+    );
+    if (option.detail == null) return label;
+    return Row(
+      children: <Widget>[
+        label,
+        const Spacer(),
+        Text(
+          option.detail!,
+          style: LpTextStyles.body.copyWith(color: LpColors.textGray),
+        ),
+      ],
+    );
+  }
+}
+
+/// 2-column illustrated option grid (design LOG IN/7).
+class _IllustratedGrid extends StatelessWidget {
+  const _IllustratedGrid({
+    required this.question,
+    required this.statusFor,
+    required this.onTap,
+  });
+
+  final OnboardingQuestion question;
+  final OptionTileStatus Function(int) statusFor;
+  final ValueChanged<int> onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const gap = 14.0;
+        final width = (constraints.maxWidth - gap) / 2;
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: <Widget>[
+            for (var i = 0; i < question.options.length; i++)
+              SizedBox(
+                width: width,
+                height: 118,
+                child: OptionTile(
+                  status: statusFor(i),
+                  onTap: () => onTap(i),
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        question.options[i].emoji ?? '✦',
+                        style: const TextStyle(fontSize: 34),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        question.options[i].label,
+                        textAlign: TextAlign.center,
+                        style: LpTextStyles.caption.copyWith(
+                          color: LpColors.ink,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

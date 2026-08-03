@@ -1,35 +1,29 @@
-/// Content for the polished Quests / Leaderboard / Profile placeholder tabs.
+/// Content for the Profile / Leaderboard / Total Points tabs and Settings
+/// (design `PROFILE /1–8`).
 library;
 
 import 'package:flutter/foundation.dart';
 
-@immutable
-class QuestItem {
-  const QuestItem({
-    required this.label,
-    required this.progress,
-    required this.progressLabel,
-  });
+// --- Profile (design PROFILE/1). ---
 
-  final String label;
+const String profileTitle = 'Profile';
+const String profileName = 'Malak';
+const String profileJoined = 'Joined February 2023';
+const String profileFollowingValue = '60';
+const String profileFollowingLabel = 'Following';
+const String profileFollowersValue = '150';
+const String profileFollowersLabel = 'Followers';
+const String profileStatisticsTitle = 'Statistics';
+const String profileReviewTitle = 'Review Progress';
+const String profileMistakesLabel = 'Mistakes';
+const String profileQuickQuizLabel = 'Quick Quiz';
+const String profileFriendsTitle = 'Find your Friends';
+const String profileConnectInstagram = 'Connect to Instagram';
+const String profileInviteFriends = 'Invite Friends';
+const String profileConnectContacts = 'Connect to Contacts';
+const String profileComingSoonSnack = 'This is coming soon!';
 
-  /// 0.0 … 1.0
-  final double progress;
-
-  /// e.g. `30 / 50`.
-  final String progressLabel;
-}
-
-const String questsTitle = 'Quests';
-const String questsHeaderTitle = 'Daily Quests';
-const String questsHeaderBody = 'Complete quests every day to earn bonus ✦!';
-const String questsFooter = 'Friend quests are coming soon — stay tuned! 🎁';
-
-const List<QuestItem> questsPlaceholder = <QuestItem>[
-  QuestItem(label: 'Earn 50 ✦', progress: 0.6, progressLabel: '30 / 50'),
-  QuestItem(label: 'Finish 1 lesson', progress: 0, progressLabel: '0 / 1'),
-  QuestItem(label: 'Practice 5 minutes', progress: 0.4, progressLabel: '2 / 5'),
-];
+// --- Leaderboard (design PROFILE/5–6). ---
 
 @immutable
 class LeaderboardEntry {
@@ -45,25 +39,74 @@ class LeaderboardEntry {
 }
 
 const String leaderboardTitle = 'Leaderboard';
-const String leaderboardHeaderTitle = 'Yellow League';
-const String leaderboardHeaderBody = 'Top builders this week';
-const String leaderboardFooter =
-    'Leagues unlock soon — keep earning ✦ to stay on top!';
+const String leaderboardTabLeadership = 'Leadership';
+const String leaderboardTabTournaments = 'Tournaments';
 
 const List<LeaderboardEntry> leaderboardPlaceholder = <LeaderboardEntry>[
-  LeaderboardEntry(name: 'Layla', xp: 4200),
-  LeaderboardEntry(name: 'Omar', xp: 3980),
-  LeaderboardEntry(name: 'You', xp: 3675, isYou: true),
-  LeaderboardEntry(name: 'Sara', xp: 2100),
-  LeaderboardEntry(name: 'Adam', xp: 1450),
+  LeaderboardEntry(name: 'Malak Hossam', xp: 4970, isYou: true),
+  LeaderboardEntry(name: 'Mohamed Hossam', xp: 3870),
+  LeaderboardEntry(name: 'Mohamed Hossam', xp: 3070),
+  LeaderboardEntry(name: 'Mohamed Hossam', xp: 2007),
+  LeaderboardEntry(name: 'Mohamed Hossam', xp: 1509),
 ];
 
-const String profileTitle = 'Profile';
-const String profileName = 'Little Builder';
-const String profileSubtitle = 'Learning Arabic · Level 1 builder';
-const String profileStreakValue = '3';
-const String profileStreakLabel = 'day streak';
-const String profileXpLabel = 'Total ✦';
-const String profileHeartsLabel = 'Hearts';
-const String profileEnergyLabel = 'Energy';
-const String profileFooter = 'Settings & parental controls are coming soon!';
+// --- Total Points / rewards (design PROFILE/8). ---
+
+const String pointsTitle = 'Total Points';
+const String pointsRewardsTitle = 'Look what your points got you!';
+
+@immutable
+class PointsReward {
+  const PointsReward({
+    required this.title,
+    required this.imageAsset,
+    required this.progress,
+    required this.progressLabel,
+    required this.unlocked,
+  });
+
+  final String title;
+  final String imageAsset;
+
+  /// 0.0 … 1.0
+  final double progress;
+
+  /// e.g. `500 / 2000`.
+  final String progressLabel;
+  final bool unlocked;
+}
+
+const List<PointsReward> pointsRewards = <PointsReward>[
+  PointsReward(
+    title: 'Arabic Alphabet Book',
+    imageAsset: 'illustrations/reward_book.png',
+    progress: 0.25,
+    progressLabel: '500 / 2000',
+    unlocked: false,
+  ),
+  PointsReward(
+    title: "Let's Play Card Game",
+    imageAsset: 'illustrations/reward_game.png',
+    progress: 1,
+    progressLabel: 'Unlocked!',
+    unlocked: true,
+  ),
+];
+
+// --- Settings (design PROFILE/2). ---
+
+const String settingsTitle = 'Settings';
+const String settingsChangePhoto = 'Change photo';
+const String settingsUsernameLabel = 'Username';
+const String settingsUsernameValue = 'Malak';
+const String settingsPasswordLabel = 'Password';
+const String settingsPasswordValue = '••••••';
+const String settingsEmailLabel = 'Email';
+const String settingsEmailValue = 'Malak11@hotmail.com';
+const String settingsTerms = 'Terms';
+const String settingsPrivacy = 'Privacy Policy';
+const String settingsDeleteAccount = 'Delete Account';
+const String settingsSoundEffects = 'Sound Effects';
+const String settingsHelpCenter = 'Help Center';
+const String settingsFeedback = 'Feedback';
+const String settingsSignOut = 'Sign Out';

@@ -11,14 +11,15 @@ import '../../data/content/lessons_content.dart';
 import '../../data/content/letters_content.dart';
 import '../../data/content/levels_content.dart';
 import '../../data/content/ui_strings.dart';
-import '../../data/models/letter.dart';
 import '../../data/models/level_section.dart';
 import '../../state/app_state.dart';
-import '../lesson/lesson_flow_screen.dart';
-import 'fatha_info_screen.dart';
+import '../lesson/level_intro_screen.dart';
+import 'settings_screen.dart';
 
-/// Home: stats bar + the five level bands (letter grid, tashkeel row and
-/// locked future levels).
+/// Home: stats bar + the five level bands per the 2026-07 design —
+/// 1 Letters (yellow grid) · 2 Tashkeel (orange row) · 3 Numbers (blue
+/// grid) · 4 Words (green category cards) · 5 Sentences (purple category
+/// cards). Unlocked tiles open their lesson through the level-intro flow.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -28,32 +29,17 @@ class HomeScreen extends StatelessWidget {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _onLetterTap(BuildContext context, Letter letter, bool unlocked) {
+  void _openLesson(BuildContext context, String? lessonId, bool unlocked) {
     if (!unlocked) {
       _showSnack(context, UiStrings.lockedLetterSnack);
       return;
     }
-    final lesson = lessonById(letter.lessonId);
+    final lesson = lessonById(lessonId);
     if (lesson == null) {
       _showSnack(context, UiStrings.lessonComingSoonSnack);
       return;
     }
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => LessonFlowScreen(lesson: lesson)),
-    );
-  }
-
-  void _onTashkeelTap(BuildContext context, Letter mark, bool unlocked) {
-    if (!unlocked) {
-      _showSnack(context, UiStrings.lockedTashkeelSnack);
-      return;
-    }
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        fullscreenDialog: true,
-        builder: (_) => const FathaInfoScreen(),
-      ),
-    );
+    LevelIntroScreen.start(context, lesson);
   }
 
   @override
@@ -61,6 +47,9 @@ class HomeScreen extends StatelessWidget {
     final appState = context.watch<AppState>();
     final letters = levelsContent[0];
     final tashkeel = levelsContent[1];
+    final numbers = levelsContent[2];
+    final words = levelsContent[3];
+    final sentences = levelsContent[4];
 
     return SafeArea(
       child: Column(
@@ -71,14 +60,16 @@ class HomeScreen extends StatelessWidget {
               xp: appState.xp,
               hearts: appState.hearts,
               energy: appState.energy,
-              onSettingsTap: () =>
-                  _showSnack(context, UiStrings.settingsComingSoonSnack),
+              onSettingsTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
+              ),
             ),
           ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
               children: <Widget>[
+                // Level 1 — Letters.
                 _LevelHeader(section: letters),
                 const SizedBox(height: 18),
                 _TileGrid(
@@ -89,12 +80,26 @@ class HomeScreen extends StatelessWidget {
                         translit: letter.translit,
                         unlocked: appState.isLetterUnlocked(letter.id),
                         color: LpColors.brandYellow,
-                        onTap: (unlocked) =>
-                            _onLetterTap(context, letter, unlocked),
+                        onTap: (unlocked) => _openLesson(
+                          context,
+                          letter.lessonId,
+                          unlocked,
+                        ),
+                      ),
+                    for (final letter in lettersExtraContent)
+                      _GlyphTile(
+                        glyph: letter.glyph,
+                        translit: letter.translit,
+                        unlocked: false,
+                        color: LpColors.brandYellow,
+                        onTap: (_) =>
+                            _showSnack(context, UiStrings.lockedLetterSnack),
                       ),
                   ],
                 ),
                 const SizedBox(height: 30),
+
+                // Level 2 — Tashkeel.
                 _LevelHeader(section: tashkeel),
                 const SizedBox(height: 18),
                 _TileGrid(
@@ -104,25 +109,57 @@ class HomeScreen extends StatelessWidget {
                         glyph: mark.glyph,
                         translit: mark.translit,
                         unlocked: defaultUnlockedTashkeelIds.contains(mark.id),
-                        color: LpColors.orange,
-                        onTap: (unlocked) =>
-                            _onTashkeelTap(context, mark, unlocked),
+                        color: LpColors.levelOrange,
+                        onTap: (unlocked) {
+                          if (!unlocked) {
+                            _showSnack(
+                              context,
+                              UiStrings.lockedTashkeelSnack,
+                            );
+                            return;
+                          }
+                          _openLesson(context, mark.lessonId, true);
+                        },
                       ),
                   ],
                 ),
-                for (final section in levelsContent.skip(2)) ...<Widget>[
-                  const SizedBox(height: 30),
+                const SizedBox(height: 30),
+
+                // Level 3 — Numbers.
+                _LevelHeader(section: numbers),
+                const SizedBox(height: 18),
+                _TileGrid(
+                  tiles: <Widget>[
+                    for (final number in numbersContent)
+                      _GlyphTile(
+                        glyph: number.glyph,
+                        translit: number.translit,
+                        unlocked: defaultUnlockedNumberIds.contains(number.id),
+                        color: LpColors.levelBlue,
+                        lightGlyph: true,
+                        onTap: (unlocked) => _openLesson(
+                          context,
+                          number.lessonId,
+                          unlocked,
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+
+                // Levels 4/5 — category cards.
+                for (final section in <LevelSection>[words, sentences]) ...[
                   _LevelHeader(section: section),
                   const SizedBox(height: 18),
-                  _TileGrid(
-                    tiles: List<Widget>.generate(
-                      5,
-                      (_) => _LockedTile(
-                        onTap: () =>
-                            _showSnack(context, UiStrings.lockedLetterSnack),
-                      ),
+                  _CategoryGrid(
+                    section: section,
+                    onTap: (category, unlocked) => _openLesson(
+                      context,
+                      category.lessonId,
+                      unlocked,
                     ),
                   ),
+                  if (section.number != 5) const SizedBox(height: 30),
                 ],
               ],
             ),
@@ -133,7 +170,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-/// Colored level header card (yellow / orange / blue / purple / green).
+/// Colored level header card (yellow / orange / blue / green / purple).
 class _LevelHeader extends StatelessWidget {
   const _LevelHeader({required this.section});
 
@@ -192,8 +229,117 @@ class _TileGrid extends StatelessWidget {
   }
 }
 
-/// Letter / tashkeel tile: colored + black border when unlocked, quiet gray
-/// when locked (locked taps shake playfully).
+/// Level-4/5 band: two category cards per row (design `PROFILE /0`,
+/// y≈1100–1700 — "2 letter words · في", "Introduce Yourself · عرف نفسك").
+class _CategoryGrid extends StatelessWidget {
+  const _CategoryGrid({required this.section, required this.onTap});
+
+  final LevelSection section;
+  final void Function(LevelCategory, bool unlocked) onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 1.55,
+        children: <Widget>[
+          for (final category in section.categories)
+            _CategoryTile(
+              category: category,
+              color: section.color,
+              unlocked: defaultUnlockedCategoryIds.contains(category.id),
+              onTap: (unlocked) => onTap(category, unlocked),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CategoryTile extends StatefulWidget {
+  const _CategoryTile({
+    required this.category,
+    required this.color,
+    required this.unlocked,
+    required this.onTap,
+  });
+
+  final LevelCategory category;
+  final Color color;
+  final bool unlocked;
+  final ValueChanged<bool> onTap;
+
+  @override
+  State<_CategoryTile> createState() => _CategoryTileState();
+}
+
+class _CategoryTileState extends State<_CategoryTile> {
+  int _shakeSeed = 0;
+
+  void _handleTap() {
+    if (!widget.unlocked) setState(() => _shakeSeed++);
+    widget.onTap(widget.unlocked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final unlocked = widget.unlocked;
+    Widget tile = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: unlocked
+          ? BoxDecoration(
+              color: widget.color,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: LpColors.ink, width: 2.5),
+              boxShadow: const <BoxShadow>[
+                BoxShadow(color: LpColors.ink, offset: Offset(0, 3)),
+              ],
+            )
+          : BoxDecoration(
+              color: LpColors.tileGray,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: LpColors.borderGray),
+            ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            widget.category.arabic,
+            textDirection: TextDirection.rtl,
+            style: LpTextStyles.arabicLarge.copyWith(
+              fontSize: 24,
+              height: 1.3,
+              color: unlocked ? LpColors.bgWhite : LpColors.textGray,
+            ),
+          ),
+          Text(
+            widget.category.english,
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center,
+            style: LpTextStyles.tileSub.copyWith(
+              fontSize: 13,
+              color: unlocked ? LpColors.bgWhite : LpColors.textGray,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (_shakeSeed > 0) {
+      tile = _Shake(key: ValueKey<int>(_shakeSeed), child: tile);
+    }
+    return GestureDetector(onTap: _handleTap, child: tile);
+  }
+}
+
+/// Letter / tashkeel / number tile: colored + black border when unlocked,
+/// quiet gray when locked (locked taps shake playfully).
 class _GlyphTile extends StatefulWidget {
   const _GlyphTile({
     required this.glyph,
@@ -201,12 +347,16 @@ class _GlyphTile extends StatefulWidget {
     required this.unlocked,
     required this.color,
     required this.onTap,
+    this.lightGlyph = false,
   });
 
   final String glyph;
   final String translit;
   final bool unlocked;
   final Color color;
+
+  /// White glyph/text on dark tile colors (Level-3 blue).
+  final bool lightGlyph;
   final ValueChanged<bool> onTap;
 
   @override
@@ -223,6 +373,9 @@ class _GlyphTileState extends State<_GlyphTile> {
 
   @override
   Widget build(BuildContext context) {
+    final glyphColor = widget.unlocked
+        ? (widget.lightGlyph ? LpColors.bgWhite : LpColors.ink)
+        : LpColors.textGray;
     Widget tile = Container(
       decoration: widget.unlocked
           ? BoxDecoration(
@@ -244,16 +397,12 @@ class _GlyphTileState extends State<_GlyphTile> {
           Text(
             widget.glyph,
             textDirection: TextDirection.rtl,
-            style: LpTextStyles.tileLetter.copyWith(
-              color: widget.unlocked ? LpColors.ink : LpColors.textGray,
-            ),
+            style: LpTextStyles.tileLetter.copyWith(color: glyphColor),
           ),
           Text(
             widget.translit,
             textDirection: TextDirection.ltr,
-            style: LpTextStyles.tileSub.copyWith(
-              color: widget.unlocked ? LpColors.ink : LpColors.textGray,
-            ),
+            style: LpTextStyles.tileSub.copyWith(color: glyphColor),
           ),
         ],
       ),
@@ -264,32 +413,6 @@ class _GlyphTileState extends State<_GlyphTile> {
     }
 
     return GestureDetector(onTap: _handleTap, child: tile);
-  }
-}
-
-/// Quiet locked tile with a small padlock (levels 3–5 rows).
-class _LockedTile extends StatelessWidget {
-  const _LockedTile({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: LpColors.tileGray,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: LpColors.borderGray),
-        ),
-        child: const Icon(
-          Icons.lock_rounded,
-          color: LpColors.textGray,
-          size: 22,
-        ),
-      ),
-    );
   }
 }
 

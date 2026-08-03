@@ -21,7 +21,28 @@ abstract final class LessonStrings {
   static const String completeSubtitlePrefix = 'You learned the letter ';
   static const String completeSubtitleSuffix = '!';
 
+  // Level chrome (2026-07 design drop). Design typos fixed deliberately
+  // ("You''ll learn" → "You'll learn", "Congratutlations" → congratulations).
+  static const String youWillLearn = "You'll learn";
+  static const String levelLabel = 'Level';
+  static const String lessonLabel = 'Lesson';
+  static const String letsPlayButton = 'LETS PLAY';
+  static const String checkpointTitle = 'Great Job Malak!';
+  static const String checkpointSubtitle = "now let's test you";
+  static const String outstandingTitle = 'Outstanding Job!';
+  static const String outstandingSubtitle = 'You crushed it';
+  static const String toastTitle = 'Awesome!';
+  static const String toastSubtitle = 'You nailed it!';
+  static const String congratsPrefix = 'Congratulations ';
+  static const String learnerName = 'Malak';
+  static const String leveledUp = "You've just leveled up!";
+  static const String pointsSuffix = 'pt';
+  static const String accuracyLabel = 'Accuracy';
+  static const String speedLabel = 'Speed';
+  static const String shareLabel = 'Share';
+
   // Accessibility.
   static const String slowPlaySemantics = 'Play slowly';
   static const String retrySemantics = 'Retry';
+  static const String micSemantics = 'Hold to speak';
 }

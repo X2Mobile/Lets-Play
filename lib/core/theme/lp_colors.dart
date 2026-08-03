@@ -39,6 +39,35 @@ abstract final class LpColors {
   /// Secondary / disabled text.
   static const Color textGray = Color(0xFF9B9B9B);
 
+  // --- Level colors sampled from the 2026-07 design drop (design/…). ---
+
+  /// Level-3 (Numbers) headers, tiles and intro screens.
+  static const Color levelBlue = Color(0xFF16A2FF);
+
+  /// Level-4 (Words) headers, tiles and intro screens.
+  static const Color levelGreen = Color(0xFF00D035);
+
+  /// Level-5 (Sentences) headers, tiles and intro screens.
+  static const Color levelPurple = Color(0xFF5D00FF);
+
+  /// Level-2 header / intro background per the new design.
+  static const Color levelOrange = Color(0xFFFD7E01);
+
+  /// Logo splash frame background (LOG IN/4).
+  static const Color crimson = Color(0xFFFF2D55);
+
+  /// Splash / login yellow per the new design (slightly warmer than
+  /// [brandYellow]).
+  static const Color splashYellow = Color(0xFFFEDD05);
+
+  /// Splash cascade brick colors (body fills from LOG IN/0–3).
+  static const List<Color> splashBrickColors = <Color>[
+    Color(0xFF2641FF), // blue
+    Color(0xFFED7703), // orange
+    Color(0xFFFF5F7D), // pink-red
+    Color(0xFF00D035), // green
+  ];
+
   /// Brick colors used by build / trace exercises and decorations.
   static const List<Color> brickColors = <Color>[
     brickRed,

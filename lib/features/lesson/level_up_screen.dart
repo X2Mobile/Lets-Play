@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/services/analytics_service.dart';
 import '../../core/theme/lp_colors.dart';
 import '../../core/theme/lp_text_styles.dart';
 import '../../core/widgets/lp_button.dart';
@@ -38,6 +39,16 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
   @override
   void initState() {
     super.initState();
+    // Reaching this screen *is* finishing the level — log here rather than on
+    // CONTINUE so the event survives a learner who never taps it.
+    final lesson = widget.lesson;
+    AnalyticsService.instance.logLevelFinished(
+      lessonId: lesson.id,
+      lessonName: lesson.titleLatin,
+      levelNumber: lesson.levelNumber,
+      lessonNumber: lesson.lessonNumber,
+      xpEarned: lesson.xpReward,
+    );
     _continueTimer = Timer(const Duration(milliseconds: 900), () {
       if (mounted) setState(() => _canContinue = true);
     });

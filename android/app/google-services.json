@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "69829573284",
+    "project_id": "let-s-play-52f6a",
+    "storage_bucket": "let-s-play-52f6a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69829573284:android:324ca8a7353ee74ed60431",
+        "android_client_info": {
+          "package_name": "com.x2mobile.letsplaygame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9A5T4VUfeDP_Vd4coXrz9dckQw53wGi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

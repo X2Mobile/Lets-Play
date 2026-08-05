@@ -1,5 +1,5 @@
 name: lets_play
-description: "LET'S PLAY! (يلا نلعب) — gamified Arabic literacy for kids. Concept MVP demo, fully offline."
+description: "LET'S PLAY! (يلا نلعب) — gamified Arabic literacy for kids. Offline content, with Firebase Analytics usage tracking."
 publish_to: 'none'
 
 version: 1.0.0+2
@@ -13,6 +13,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   audioplayers: ^6.1.0
+  firebase_core: ^4.13.0
+  firebase_analytics: ^12.4.6
 
 dev_dependencies:
   flutter_test:

@@ -5,12 +5,10 @@ built around a LEGO-brick metaphor: children *construct* Arabic letters, tashkee
 numbers from colored bricks, trace them, and match them to real recorded sounds, words
 and dialogues.
 
-**Pure concept MVP: no server, no auth, no payments.** Everything is hardcoded in
-organized content files; real Arabic audio recordings, the brand logos and character
-illustrations are bundled as assets. The UI follows the client's **2026-07 SVG design
-drop** (`../design/` — folders `LEVEL 1`–`LEVEL 5`, `LOG IN`, `PROFILE`), which
-supersedes the original Adobe XD prototypes. The distilled design system and palette
-live in `DESIGN_SPEC.md`.
+**Firebase Analytics** is wired in (project `let-s-play-52f6a`), so the demo reports live,
+measurable usage — active users, sessions and retention out of the box, plus a
+`level_finished` event that counts how many levels learners actually complete (tagged with
+level, lesson and XP earned). See [Analytics](#analytics) for the event contract.
 
 ---
 
@@ -140,6 +138,46 @@ heart (never below 1 — the demo can't dead-end).
 
 ---
 
+## Analytics
+
+Firebase Analytics (`firebase_core` + `firebase_analytics`) reports against Firebase
+project **`let-s-play-52f6a`**, app id `com.x2mobile.letsplaygame`. Native configs are
+committed at `ios/Runner/GoogleService-Info.plist` and `android/app/google-services.json`;
+the Dart-side values live in `lib/firebase_options.dart`.
+
+Automatically collected — no code needed: **active users** (DAU/WAU/MAU), sessions,
+session duration, retention, first_open, device/country breakdowns.
+
+One custom event, logged from `LevelUpScreen.initState` (i.e. the moment the last exercise
+is cleared, so it counts even if the learner never taps CONTINUE):
+
+| Event | Parameters |
+| --- | --- |
+| `level_finished` | `lesson_id`, `lesson_name`, `level_number`, `lesson_number`, `xp_earned` |
+
+Counting `level_finished` gives levels-completed totals; segmenting by `level_number`
+shows where learners drop off across the five bands. Note that the parameters only become
+reportable once registered as custom dimensions/metrics in GA4 (*Admin → Custom
+definitions*) — the raw event count works immediately, the breakdowns do not.
+
+`AnalyticsService` (`lib/core/services/analytics_service.dart`) is a no-op when Firebase
+fails to initialise — an unregistered platform (web) or a missing native config disables
+analytics instead of crashing the demo.
+
+Collection is confirmed working — the first simulator run showed up as an active user in
+the Firebase console. One gap: no Firebase **web** app is registered for the project, so
+analytics is inert on the web build (the app itself still runs).
+
+To watch events arrive in the console's DebugView:
+
+```bash
+# Android
+adb shell setprop debug.firebase.analytics.app com.x2mobile.letsplaygame
+# iOS — add -FIRAnalyticsDebugEnabled to Runner's scheme launch arguments in Xcode
+```
+
+---
+
 ## Content & asset inventory (all hardcoded / bundled)
 
 - `lib/data/content/` — the single source of truth: `letters_content.dart`,
@@ -160,6 +198,7 @@ heart (never below 1 — the demo can't dead-end).
 ```
 lib/
   main.dart / app.dart          # bootstrap, theme, provider wiring
+  firebase_options.dart         # Firebase project config (Android + iOS)
   core/
     theme/                      # LpColors (XD palette + 2026-07 level colors),
                                 # text styles, ThemeData
@@ -167,7 +206,8 @@ lib/
                                 # StudProgressBar, StatsBar, BrickWidget/BrickGlyph,
                                 # BaseplateBackground, AudioButton, HeartCounter,
                                 # ExerciseTopBar, MascotImage, LpIcons, LpLogo
-    services/audio_service.dart # audioplayers wrapper (asset play + slow rate)
+    services/                   # audio_service (audioplayers wrapper: asset play +
+                                # slow rate), analytics_service (Firebase Analytics)
   data/
     models/                     # Letter, LevelSection/LevelCategory, Lesson,
                                 # 16 sealed Exercise variants, OnboardingQuestion,
@@ -188,4 +228,4 @@ lib/
 - Design language: "neo-brutalist toy" — hard zero-blur shadows, 2.5–3 px black
   borders, brand palette, custom-painted bricks/icons. No stock Material widgets.
 - `flutter analyze` is clean; web release build compiles; the app runs on
-  iOS / Android / web.
+  iOS / Android / web. Firebase pushes the iOS minimum to **15.0** (was 13.0).

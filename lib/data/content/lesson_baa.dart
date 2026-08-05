@@ -54,8 +54,10 @@ const Lesson lessonBaa = Lesson(
       ],
       timerSeconds: 30,
       maxMoves: 10,
-      formTabs: <String>['بـ', 'ـبـ', 'ب'],
-      activeFormIndex: 2,
+      // RTL row — index 0 is the rightmost tab, so the form being built leads
+      // and is the green one.
+      formTabs: <String>['ب', 'ـبـ', 'بـ'],
+      activeFormIndex: 0,
       guideLabel: 'Baseline',
     ),
     TraceLetterExercise(

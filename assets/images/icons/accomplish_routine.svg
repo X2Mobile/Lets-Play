@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 67.6 80.5" style="enable-background:new 0 0 67.6 80.5;" xml:space="preserve">
+<g>
+	<g id="Modes3_78">
+		<g id="Group_6913" transform="translate(-3519 633)">
+			<g id="Rectangle_2809-3" transform="translate(3575 -29)">
+				<path d="M-52.8-526h62c0.6,0,1,0.4,1,1v1c0,0.6-0.4,1-1,1h-62c-0.6,0-1-0.4-1-1v-1C-53.8-525.6-53.4-526-52.8-526z" />
+				<path d="M-52.8-525.5h62c0.3,0,0.5,0.2,0.5,0.5v1c0,0.3-0.2,0.5-0.5,0.5h-62c-0.3,0-0.5-0.2-0.5-0.5v-1      C-53.3-525.3-53.1-525.5-52.8-525.5z" fill="none" stroke="#000000" />
+			</g>
+			<g id="Dialog_Confirm_-_2_Button-3" transform="translate(3572.807 -107)">
+				<path id="bg-4" d="M-52.8-526h65.6c0.6,0,1,0.4,1,1v77c0,0.6-0.4,1-1,1h-65.6c-0.6,0-1-0.4-1-1v-77      C-53.8-525.6-53.4-526-52.8-526z" fill="#00D035" />
+				<g id="outline-3" transform="translate(0)">
+					<path d="M-53.6-526h67.1c0.1,0,0.2,0.2,0.2,0.5v78c0,0.3-0.1,0.5-0.2,0.5h-67.1c-0.1,0-0.2-0.2-0.2-0.5v-78       C-53.8-525.8-53.7-526-53.6-526z" fill="none" />
+					<path d="M-51.8-524v75h63.6v-75H-51.8 M-53.6-526h67.1c0.1,0,0.2,0.2,0.2,0.5v78c0,0.3-0.1,0.5-0.2,0.5h-67.1       c-0.1,0-0.2-0.2-0.2-0.5v-78C-53.8-525.8-53.7-526-53.6-526z" />
+				</g>
+			</g>
+			<g id="Group_6912" transform="translate(5145.623 -177.884)">
+				<g id="Group_6750" transform="translate(-1564.268 86.66)">
+					<rect id="Rectangle_4262" x="-53.8" y="-494.8" width="7.5" height="9.9" fill="#D4DBE8" stroke="#D4DBE8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<rect id="Rectangle_4263" x="-53.8" y="-494.8" width="7.5" height="9.9" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11998" d="M-42.9-505.1h7.5v20.1h-7.5V-505.1z" fill="#0021FF" stroke="#0021FF" stroke-width="1.2" stroke-linecap="round" />
+					<rect id="Rectangle_4265" x="-42.9" y="-505.1" width="7.5" height="20.1" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<rect id="Rectangle_4266" x="-32" y="-499.2" width="7.5" height="14.2" fill="#D4DBE8" stroke="#D4DBE8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<rect id="Rectangle_4267" x="-32" y="-499.2" width="7.5" height="14.2" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<rect id="Rectangle_4268" x="-21.1" y="-518.7" width="7.5" height="33.8" fill="#FEDD05" stroke="#FEDD05" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<rect id="Rectangle_4269" x="-21.1" y="-518.7" width="7.5" height="33.8" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<rect id="Rectangle_4270" x="-10.2" y="-526" width="7.5" height="41.1" fill="#E0E0E0" stroke="#00D035" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<rect id="Rectangle_4271" x="-10.2" y="-526" width="7.5" height="41.1" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+				</g>
+				<line id="Line_282" x1="-1621" y1="-398.3" x2="-1564.1" y2="-398.3" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

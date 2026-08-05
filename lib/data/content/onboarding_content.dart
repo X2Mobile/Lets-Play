@@ -13,11 +13,23 @@ const List<OnboardingQuestion> onboardingContent = <OnboardingQuestion>[
     bannerColor: LpColors.royalBlue,
     twoColumns: true,
     options: <OnboardingOption>[
-      OnboardingOption('Get ready for future trips', emoji: '🗺'),
-      OnboardingOption('Establish connections', emoji: '🌐'),
-      OnboardingOption('Enhance my education', emoji: '📜'),
-      OnboardingOption('Advance my career', emoji: '📊'),
-      OnboardingOption('Other', emoji: '✳'),
+      OnboardingOption(
+        'Get ready for future trips',
+        iconAsset: 'icons/motivation_trips.svg',
+      ),
+      OnboardingOption(
+        'Establish connections',
+        iconAsset: 'icons/motivation_connections.svg',
+      ),
+      OnboardingOption(
+        'Enhance my education',
+        iconAsset: 'icons/motivation_education.svg',
+      ),
+      OnboardingOption(
+        'Advance my career',
+        iconAsset: 'icons/motivation_career.svg',
+      ),
+      OnboardingOption('Other', iconAsset: 'icons/motivation_other.svg'),
     ],
   ),
   OnboardingQuestion(
@@ -62,22 +74,27 @@ const String upsellLaunching = 'Launching';
 const String upsellContinue = 'Continue';
 
 class UpsellBenefit {
-  const UpsellBenefit(this.emoji, this.title, this.subtitle);
+  const UpsellBenefit(this.iconAsset, this.title, this.subtitle);
 
-  final String emoji;
+  /// Path under `assets/images/`.
+  final String iconAsset;
   final String title;
   final String subtitle;
 }
 
 const List<UpsellBenefit> upsellBenefits = <UpsellBenefit>[
   UpsellBenefit(
-    '🚫',
+    'icons/upsell_ad_free.svg',
     'AD FREE!',
     'No more interruptions with LetsPlay+',
   ),
-  UpsellBenefit('❤', 'Unlimited Hearts', 'Play whenever with unlimited lives'),
   UpsellBenefit(
-    '📀',
+    'icons/upsell_unlimited_hearts.svg',
+    'Unlimited Hearts',
+    'Play whenever with unlimited lives',
+  ),
+  UpsellBenefit(
+    'icons/upsell_personalized.svg',
     'Personalized Lessons',
     'Customized only for you and your needs',
   ),
@@ -88,32 +105,28 @@ const List<UpsellBenefit> upsellBenefits = <UpsellBenefit>[
 const String accomplishTitle = "Here's what you can accomplish!";
 
 class AccomplishItem {
-  const AccomplishItem(this.emoji, this.tileColorIndex, this.title, this.subtitle);
+  const AccomplishItem(this.iconAsset, this.title, this.subtitle);
 
-  final String emoji;
-
-  /// Index into the accomplish tile palette (blue / red / green).
-  final int tileColorIndex;
+  /// Path under `assets/images/`. The icon's blue / red / green tile and its
+  /// hard shadow are part of the artwork, so the card draws no tile of its own.
+  final String iconAsset;
   final String title;
   final String subtitle;
 }
 
 const List<AccomplishItem> accomplishItems = <AccomplishItem>[
   AccomplishItem(
-    '💬',
-    0,
+    'icons/accomplish_conversations.svg',
     'Engage in confident conversations',
     'Interact with people with less difficulty.',
   ),
   AccomplishItem(
-    '📄',
-    1,
+    'icons/accomplish_vocabulary.svg',
     'Expand your vocabulary significantly',
     'Learn new words that will make you express yourself better.',
   ),
   AccomplishItem(
-    '📊',
-    2,
+    'icons/accomplish_routine.svg',
     'Cultivate a consistent learning routine',
     'Build the healthy habit of learning something new everyday.',
   ),

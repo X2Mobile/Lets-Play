@@ -6,6 +6,7 @@ import '../../core/theme/lp_text_styles.dart';
 import '../../core/widgets/lp_card.dart';
 import '../../core/widgets/option_tile.dart';
 import '../../core/widgets/stud_progress_bar.dart';
+import '../../core/widgets/svg_icon.dart';
 import '../../data/content/onboarding_content.dart';
 import '../../data/models/onboarding_question.dart';
 import '../../state/app_state.dart';
@@ -41,7 +42,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     Future<void>.delayed(const Duration(milliseconds: 350), () {
       if (!mounted) return;
       if (_step >= onboardingContent.length - 1) {
-        Navigator.of(context).pushReplacement(
+        // Pushed, not replaced, so the back chevron on the following steps
+        // has somewhere to return to.
+        Navigator.of(context).push(
           MaterialPageRoute<void>(builder: (_) => const UpsellScreen()),
         );
         return;
@@ -230,10 +233,8 @@ class _IllustratedGrid extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        question.options[i].emoji ?? '✦',
-                        style: const TextStyle(fontSize: 34),
-                      ),
+                      if (question.options[i].iconAsset case final String icon)
+                        SvgIcon(asset: icon, size: 46),
                       const SizedBox(height: 8),
                       Text(
                         question.options[i].label,

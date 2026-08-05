@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
-/// One answer of an [OnboardingQuestion] — plain text, optionally with a
-/// small emoji illustration (design: the "Why … study Arabic?" grid) or a
-/// secondary label ("Casual" next to "10 min/day").
+/// One answer of an [OnboardingQuestion] — plain text, optionally with an
+/// icon from the design drop (the "Why … study Arabic?" grid) or a secondary
+/// label ("Casual" next to "10 min/day").
 @immutable
 class OnboardingOption {
-  const OnboardingOption(this.label, {this.emoji, this.detail});
+  const OnboardingOption(this.label, {this.iconAsset, this.detail});
 
   final String label;
-  final String? emoji;
+
+  /// Path under `assets/images/`, e.g. `icons/motivation_trips.svg`.
+  final String? iconAsset;
   final String? detail;
 }
 

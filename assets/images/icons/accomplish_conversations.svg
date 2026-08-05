@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 67.5 83.2" style="enable-background:new 0 0 67.5 83.2;" xml:space="preserve">
+<g>
+	<g id="Modes3_78_1_">
+		<g id="Group_6906_1_" transform="translate(-3395 394)">
+			<g id="Rectangle_2809_1_" transform="translate(3451 -29)">
+				<path d="M-52.7-284.8h62c0.6,0,1,0.4,1,1v1c0,0.6-0.4,1-1,1h-62c-0.6,0-1-0.4-1-1v-1C-53.7-284.4-53.2-284.8-52.7-284.8z" />
+				<path d="M-52.7-284.3h62c0.3,0,0.5,0.2,0.5,0.5v1c0,0.3-0.2,0.5-0.5,0.5h-62c-0.3,0-0.5-0.2-0.5-0.5v-1      C-53.2-284.1-53-284.3-52.7-284.3z" fill="none" stroke="#000000" />
+			</g>
+			<g id="Dialog_Confirm_-_2_Button_1_" transform="translate(3448.686 -109.193)">
+				<path id="bg-2_1_" d="M-51.7-284.8h63.5c1.1,0,2,0.9,2,2v78.1c0,1.1-0.9,2-2,2h-63.5c-1.1,0-2-0.9-2-2v-78.1      C-53.7-283.9-52.8-284.8-51.7-284.8z" fill="#16A2FF" />
+				<g id="outline_1_" transform="translate(0)">
+					<path d="M-53.4-284.8h67c0.1,0,0.2,0.2,0.2,0.5v81c0,0.3-0.1,0.5-0.2,0.5h-67c-0.1,0-0.2-0.2-0.2-0.5v-81       C-53.7-284.6-53.6-284.8-53.4-284.8z" fill="none" />
+					<path d="M-51.7-282.8v78.1h63.5v-78.1H-51.7 M-53.4-284.8h67c0.1,0,0.2,0.2,0.2,0.5v81c0,0.3-0.1,0.5-0.2,0.5h-67       c-0.1,0-0.2-0.2-0.2-0.5v-81C-53.7-284.6-53.6-284.8-53.4-284.8z" />
+				</g>
+			</g>
+			<g id="Group_6716_1_" transform="translate(5441.266 -111.31)">
+				<g id="Group_6714_1_" transform="translate(-1968.912 42.843)">
+					<path id="Path_11934_1_" d="M-38.7-260.8c1.4,3.1,4.5,5.1,7.9,5.1c0,0-3.2-2.4-2.4-6.3" fill="#0021FF" stroke="#3E32F6" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11935_1_" d="M-38.7-260.8c1.4,3.1,4.5,5.1,7.9,5.1c0,0-3.2-2.4-2.4-6.3" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11936_1_" d="M-33.7-260.5h13.4c2.3,0,4.1-1.9,4.1-4.1v-16c0-2.3-1.9-4.1-4.1-4.1h-29.2       c-2.3,0-4.1,1.9-4.1,4.1v16c0,2.3,1.9,4.1,4.1,4.1h11.5" fill="#0021FF" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<ellipse id="Ellipse_1343_1_" cx="-41" cy="-273.2" rx="2.6" ry="4.5" fill="#FFFFFF" />
+					<ellipse id="Ellipse_1344_1_" cx="-30.3" cy="-273.2" rx="2.6" ry="4.5" fill="#FFFFFF" stroke="#121212" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<ellipse id="Ellipse_1345_1_" cx="-41" cy="-273.2" rx="2.6" ry="4.5" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<ellipse id="Ellipse_1346_1_" cx="-30.3" cy="-273.2" rx="2.6" ry="4.5" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11937_1_" d="M-42.5-275.6c0.5,0,0.9,0.8,0.9,1.7c0,0.1,0,0.2,0,0.2l-0.9,0.4l0.7,0.4       c-0.2,0.4-0.4,0.7-0.7,0.7c-0.5,0-0.9-0.8-0.9-1.7S-43-275.6-42.5-275.6z" stroke="#000000" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11938_1_" d="M-31.8-275.6c0.5,0,0.9,0.8,0.9,1.7c0,0.1,0,0.2,0,0.2l-0.9,0.4l0.7,0.4       c-0.2,0.4-0.4,0.7-0.7,0.7c-0.5,0-0.9-0.8-0.9-1.7S-32.3-275.6-31.8-275.6z" stroke="#000000" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11939_1_" d="M-38.4-268.6c0,1.5,1.2,2.8,2.8,2.8s2.8-1.2,2.8-2.8" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Rectangle_4251_1_" d="M-28.3-260.5h-13.3c-6.7,0-12.1-5.4-12.1-12.1v0c0-6.7,5.4-12.1,12.1-12.1h13.3       c6.7,0,12.1,5.4,12.1,12.1v0C-16.2-266-21.6-260.5-28.3-260.5z" fill="none" />
+				</g>
+				<g id="Group_6715_1_" transform="translate(-1985.266 14.31)">
+					<path id="Path_11940_1_" d="M-42.8-262l-2.1,6.3l7.5-6.3" fill="#FF2D55" stroke="#FF2D55" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11941_1_" d="M-42.8-262l-2.1,6.3l7.5-6.3" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11942_1_" d="M-43-260.5h-6.6c-2.3,0-4.1-1.9-4.1-4.1v-16c0-2.3,1.9-4.1,4.1-4.1h29.2       c2.3,0,4.1,1.9,4.1,4.1v16c0,2.3-1.9,4.1-4.1,4.1h-19.3" fill="#FF2D55" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Rectangle_4253_1_" d="M-39.9-278.5L-39.9-278.5c1.4,0,2.5,1.1,2.5,2.5v4.6c0,1.4-1.1,2.5-2.5,2.5h0       c-1.4,0-2.5-1.1-2.5-2.5v-4.6C-42.4-277.4-41.3-278.5-39.9-278.5z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Rectangle_4254_1_" d="M-29.9-278.5L-29.9-278.5c1.4,0,2.5,1.1,2.5,2.5v4.6c0,1.4-1.1,2.5-2.5,2.5h0       c-1.4,0-2.5-1.1-2.5-2.5v-4.6C-32.4-277.4-31.3-278.5-29.9-278.5z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Rectangle_4255_1_" d="M-39.9-278.5L-39.9-278.5c1.4,0,2.5,1.1,2.5,2.5v4.6c0,1.4-1.1,2.5-2.5,2.5h0       c-1.4,0-2.5-1.1-2.5-2.5v-4.6C-42.4-277.4-41.3-278.5-39.9-278.5z" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Rectangle_4256_1_" d="M-29.9-278.5L-29.9-278.5c1.4,0,2.5,1.1,2.5,2.5v4.6c0,1.4-1.1,2.5-2.5,2.5h0       c-1.4,0-2.5-1.1-2.5-2.5v-4.6C-32.4-277.4-31.3-278.5-29.9-278.5z" fill="none" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11943_1_" d="M-38.3-277.6c-0.5,0-0.9,0.8-0.9,1.7c0,0.1,0,0.2,0,0.2l0.9,0.4l-0.7,0.4       c0.2,0.4,0.4,0.7,0.7,0.7c0.5,0,0.9-0.8,0.9-1.7C-37.4-276.8-37.8-277.6-38.3-277.6z" stroke="#000000" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11944_1_" d="M-28.3-277.6c-0.5,0-0.9,0.8-0.9,1.7c0,0.1,0,0.2,0,0.2l0.9,0.4l-0.7,0.4       c0.2,0.4,0.4,0.7,0.7,0.7c0.5,0,0.9-0.8,0.9-1.7C-27.4-276.8-27.8-277.6-28.3-277.6z" stroke="#000000" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Path_11945_1_" d="M-37.7-267.5c0,1.5,1.2,2.8,2.8,2.8s2.8-1.2,2.8-2.8H-37.7z" stroke="#000000" stroke-width="0.832" stroke-linecap="round" stroke-linejoin="round" />
+					<path id="Rectangle_4257_1_" d="M-41.6-284.8h13.3c6.7,0,12.1,5.4,12.1,12.1v0c0,6.7-5.4,12.1-12.1,12.1h-13.3       c-6.7,0-12.1-5.4-12.1-12.1v0C-53.7-279.4-48.3-284.8-41.6-284.8z" fill="none" />
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+</svg>

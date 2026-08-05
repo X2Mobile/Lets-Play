@@ -11,6 +11,7 @@ import '../../core/widgets/lp_button.dart';
 import '../../core/widgets/lp_card.dart';
 import '../../core/widgets/lp_logo.dart';
 import '../../core/widgets/stud_progress_bar.dart';
+import '../../core/widgets/svg_icon.dart';
 import '../../data/content/onboarding_content.dart';
 import 'plan_loading_screen.dart';
 
@@ -21,7 +22,7 @@ class UpsellScreen extends StatelessWidget {
   const UpsellScreen({super.key});
 
   void _advance(BuildContext context) {
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const AccomplishScreen()),
     );
   }
@@ -74,10 +75,7 @@ class UpsellScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: <Widget>[
-                            Text(
-                              benefit.emoji,
-                              style: const TextStyle(fontSize: 34),
-                            ),
+                            SvgIcon(asset: benefit.iconAsset, size: 46),
                             const SizedBox(width: 14),
                             Expanded(
                               child: Column(
@@ -128,12 +126,6 @@ class UpsellScreen extends StatelessWidget {
 class AccomplishScreen extends StatelessWidget {
   const AccomplishScreen({super.key});
 
-  static const List<Color> _tileColors = <Color>[
-    LpColors.levelBlue,
-    LpColors.brickRed,
-    LpColors.legoGreen,
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,23 +160,7 @@ class AccomplishScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(12),
                         child: Row(
                           children: <Widget>[
-                            Container(
-                              width: 74,
-                              height: 74,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: _tileColors[item.tileColorIndex],
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: LpColors.ink,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Text(
-                                item.emoji,
-                                style: const TextStyle(fontSize: 34),
-                              ),
-                            ),
+                            SvgIcon(asset: item.iconAsset, size: 74),
                             const SizedBox(width: 14),
                             Expanded(
                               child: Column(
@@ -211,7 +187,7 @@ class AccomplishScreen extends StatelessWidget {
               child: LpButton(
                 label: 'Continue',
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => const PlacementScreen(),
                     ),
@@ -262,16 +238,14 @@ class PlacementScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             _PlacementCard(
-              emoji: '🧱',
-              tileColor: LpColors.brandYellow,
+              iconAsset: 'icons/placement_scratch.svg',
               title: placementScratchTitle,
               subtitle: placementScratchSubtitle,
               onTap: () => _choose(context),
             ),
             const SizedBox(height: 16),
             _PlacementCard(
-              emoji: '🔍',
-              tileColor: LpColors.levelOrange,
+              iconAsset: 'icons/placement_find.svg',
               title: placementFindTitle,
               subtitle: placementFindSubtitle,
               onTap: () => _choose(context),
@@ -285,15 +259,14 @@ class PlacementScreen extends StatelessWidget {
 
 class _PlacementCard extends StatelessWidget {
   const _PlacementCard({
-    required this.emoji,
-    required this.tileColor,
+    required this.iconAsset,
     required this.title,
     required this.subtitle,
     required this.onTap,
   });
 
-  final String emoji;
-  final Color tileColor;
+  /// Path under `assets/images/`; the icon carries its own coloured tile.
+  final String iconAsset;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
@@ -310,17 +283,7 @@ class _PlacementCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: <Widget>[
-              Container(
-                width: 74,
-                height: 74,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: tileColor,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: LpColors.ink, width: 2),
-                ),
-                child: Text(emoji, style: const TextStyle(fontSize: 34)),
-              ),
+              SvgIcon(asset: iconAsset, size: 74),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(

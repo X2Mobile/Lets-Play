@@ -101,8 +101,8 @@ heart (never below 1 — the demo can't dead-end).
 | Level | Lesson | Highlights |
 |---|---|---|
 | 1 | **أ Alef** (+ **ب Baa**) | tutorial → build with form tabs → press-reveal → letter forms → trace → checkpoint → listen/true-false/speak/picture-word drills → form-the-word |
-| 2 | **Fatha** | build the ascender staircase → fatha card → كَ/لَ flashcards → pronunciation quizzes → place the fatha → أكَلَ speaking + breakdown → match the mark |
-| 3 | **٢ Ithnan** | build the brick numeral → اثنان card → press-reveal → rebuild → true/false ×2 → match/count/listen → trace → pronounce |
+| 2 | **Fatha** | build the ascender staircase → fatha card → كَ flashcard → pronunciation quiz → تَ pronunciation quiz + flashcard → place the fatha → أكَلَ speaking + breakdown → match the mark |
+| 3 | **٢ Ithnan** | build the brick numeral → اثنان card → press-reveal → trace → true/false ×2 → match/count/listen → pronounce |
 | 4 | **Word Types** | teach-then-drill grammar: اسم/فعل/حرف, noun types & signs, verb tenses, imperative, 7-sentence conjugation battery, classify |
 | 5 | **Introduce Yourself** | listen to the أنا أعيش في مصر dialogue → form its question → choose-what-you-hear → build أهلاً صباح الخير → fill the blank → rearrange |
 

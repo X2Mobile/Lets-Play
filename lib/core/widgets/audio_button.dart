@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 
 import '../services/audio_service.dart';
 import '../theme/lp_colors.dart';
+import 'lp_icons.dart';
 
 /// Size variants for [AudioButton].
 enum AudioButtonVariant { big, small }
 
-/// White bordered square with a yellow speaker icon and hard shadow.
-/// Tapping plays [audioFile] through [AudioService] (optionally slowed via
-/// [rate] — e.g. 0.6 for the snail button).
+/// White bordered square with a hard shadow. Tapping plays [audioFile]
+/// through [AudioService]; a [rate] below 1 makes this the slow-playback
+/// button, which wears a snail instead of the yellow speaker.
 class AudioButton extends StatefulWidget {
   const AudioButton({
     super.key,
@@ -36,6 +37,9 @@ class _AudioButtonState extends State<AudioButton> {
 
   double get _size => widget.variant == AudioButtonVariant.big ? 76 : 48;
 
+  /// Slowed playback is the "play slowly" control — hence the snail.
+  bool get _slow => widget.rate < 1;
+
   void _play() {
     AudioService.instance.playAsset(widget.audioFile, rate: widget.rate);
     widget.onPlayed?.call();
@@ -45,36 +49,42 @@ class _AudioButtonState extends State<AudioButton> {
   Widget build(BuildContext context) {
     final big = widget.variant == AudioButtonVariant.big;
     final shadowOffset = Offset(0, big ? 4 : 3);
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapCancel: () => setState(() => _pressed = false),
-      onTapUp: (_) {
-        setState(() => _pressed = false);
-        _play();
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        width: _size,
-        height: _size,
-        transform: Matrix4.translationValues(
-          0,
-          _pressed ? shadowOffset.dy : 0,
-          0,
-        ),
-        decoration: BoxDecoration(
-          color: LpColors.bgWhite,
-          borderRadius: BorderRadius.circular(big ? 12 : 10),
-          border: Border.all(color: LpColors.ink, width: big ? 3 : 2.5),
-          boxShadow: _pressed
-              ? null
-              : <BoxShadow>[
-                  BoxShadow(color: LpColors.ink, offset: shadowOffset),
-                ],
-        ),
-        child: Center(
-          child: CustomPaint(
-            size: Size.square(_size * 0.55),
-            painter: const _SpeakerPainter(),
+    return Semantics(
+      label: _slow ? 'Play slowly' : 'Play sound',
+      button: true,
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapCancel: () => setState(() => _pressed = false),
+        onTapUp: (_) {
+          setState(() => _pressed = false);
+          _play();
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 80),
+          width: _size,
+          height: _size,
+          transform: Matrix4.translationValues(
+            0,
+            _pressed ? shadowOffset.dy : 0,
+            0,
+          ),
+          decoration: BoxDecoration(
+            color: LpColors.bgWhite,
+            borderRadius: BorderRadius.circular(big ? 12 : 10),
+            border: Border.all(color: LpColors.ink, width: big ? 3 : 2.5),
+            boxShadow: _pressed
+                ? null
+                : <BoxShadow>[
+                    BoxShadow(color: LpColors.ink, offset: shadowOffset),
+                  ],
+          ),
+          child: Center(
+            child: _slow
+                ? SnailIcon(size: _size * 0.62)
+                : CustomPaint(
+                    size: Size.square(_size * 0.55),
+                    painter: const _SpeakerPainter(),
+                  ),
           ),
         ),
       ),

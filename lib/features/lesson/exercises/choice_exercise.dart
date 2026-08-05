@@ -45,7 +45,13 @@ class _ChoicePageState extends State<ChoicePage> {
   @override
   void initState() {
     super.initState();
-    final audio = widget.exercise.audioFile ?? widget.exercise.prompt?.audioFile;
+    // Only play what the child can see a speaker button for. A prompt showing
+    // an Arabic glyph draws no button (see _Prompt), and on "Choose the
+    // pronunciation" that audio would just read the answer out loud.
+    final prompt = widget.exercise.prompt;
+    final audio =
+        widget.exercise.audioFile ??
+        (prompt?.arabic == null ? prompt?.audioFile : null);
     if (audio != null) {
       _autoplayTimer = Timer(const Duration(milliseconds: 380), () {
         AudioService.instance.playAsset(audio);
@@ -330,6 +336,17 @@ class _OptionsGrid extends StatelessWidget {
   }
 
   Widget _optionContent(ExerciseOption option, {bool center = false}) {
+    if (option.brickCount != null) {
+      return Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        alignment: WrapAlignment.center,
+        children: List<Widget>.generate(
+          option.brickCount!,
+          (_) => const BrickWidget(color: LpColors.brandYellow, unit: 20),
+        ),
+      );
+    }
     if (option.imageAsset != null) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,

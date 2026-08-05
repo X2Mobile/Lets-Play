@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,24 +30,9 @@ class PressRevealPage extends StatefulWidget {
 
 class _PressRevealPageState extends State<PressRevealPage> {
   bool _showBricks = false;
-  Timer? _autoplayTimer;
 
-  @override
-  void initState() {
-    super.initState();
-    final audio = widget.exercise.audioFile;
-    if (audio != null) {
-      _autoplayTimer = Timer(const Duration(milliseconds: 380), () {
-        AudioService.instance.playAsset(audio);
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _autoplayTimer?.cancel();
-    super.dispose();
-  }
+  // Nothing plays on arrival — the letter card is the press target ("Press on
+  // the letter"), so the sound follows the tap in _toggle.
 
   void _toggle() {
     HapticFeedback.selectionClick();

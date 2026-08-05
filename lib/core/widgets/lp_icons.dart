@@ -335,3 +335,78 @@ class _SmileyPainter extends CustomPainter {
   @override
   bool shouldRepaint(_SmileyPainter oldDelegate) => oldDelegate.color != color;
 }
+
+/// Snail 🐌 — the slow-playback button in the listen exercises.
+class SnailIcon extends StatelessWidget {
+  const SnailIcon({super.key, this.size = 26, this.color = LpColors.orange});
+
+  final double size;
+
+  /// Shell fill; the body stays a soft neutral so the spiral reads clearly.
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) =>
+      CustomPaint(size: Size.square(size), painter: _SnailPainter(color));
+}
+
+class _SnailPainter extends CustomPainter {
+  const _SnailPainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final line = _stroke(math.max(1.6, w * 0.075));
+
+    // Body: a foot along the ground rising into the head, with two stalks.
+    final body = Path()
+      ..moveTo(w * 0.06, h * 0.86)
+      ..quadraticBezierTo(w * 0.02, h * 0.62, w * 0.24, h * 0.58)
+      ..lineTo(w * 0.66, h * 0.58)
+      ..quadraticBezierTo(w * 0.99, h * 0.60, w * 0.94, h * 0.86)
+      ..close();
+    canvas.drawPath(body, _fill(LpColors.lighten(color, 0.55)));
+    canvas.drawPath(body, line);
+
+    // Eye stalks off the head, each tipped with a dot.
+    for (final dx in <double>[0.80, 0.94]) {
+      canvas.drawLine(
+        Offset(w * (dx - 0.06), h * 0.58),
+        Offset(w * dx, h * 0.30),
+        line,
+      );
+      canvas.drawCircle(
+        Offset(w * dx, h * 0.26),
+        w * 0.055,
+        _fill(LpColors.ink),
+      );
+    }
+
+    // Shell: filled disc with a spiral wound inside it.
+    final shellCentre = Offset(w * 0.42, h * 0.44);
+    final shellRadius = w * 0.30;
+    canvas.drawCircle(shellCentre, shellRadius, _fill(color));
+    canvas.drawCircle(shellCentre, shellRadius, line);
+
+    final spiral = Path();
+    const turns = 2.0;
+    const steps = 44;
+    for (var i = 0; i <= steps; i++) {
+      final t = i / steps;
+      final angle = t * turns * 2 * math.pi;
+      final r = shellRadius * (1 - t) * 0.82;
+      final point =
+          shellCentre + Offset(math.cos(angle) * r, math.sin(angle) * r);
+      i == 0
+          ? spiral.moveTo(point.dx, point.dy)
+          : spiral.lineTo(point.dx, point.dy);
+    }
+    canvas.drawPath(spiral, _stroke(math.max(1.2, w * 0.055)));
+  }
+
+  @override
+  bool shouldRepaint(_SnailPainter oldDelegate) => oldDelegate.color != color;
+}

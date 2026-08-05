@@ -4,17 +4,24 @@ import 'package:flutter/material.dart';
 
 /// One answer choice in match / listen exercises.
 ///
-/// Exactly one of [emoji] (illustration placeholder), [imageAsset]
-/// (bundled illustration) or [letter] (Arabic letter card) should be set.
+/// Exactly one of [brickCount] (that many real bricks), [emoji] (illustration
+/// placeholder), [imageAsset] (bundled illustration) or [letter] (Arabic
+/// letter card) should be set.
 @immutable
 class ExerciseOption {
   const ExerciseOption({
+    this.brickCount,
     this.emoji,
     this.imageAsset,
     this.letter,
     this.label,
     required this.isCorrect,
   });
+
+  /// Renders this many LEGO bricks — how the counting answers are drawn, so
+  /// they match the bricks the child has been building with. Same convention
+  /// as [ChoicePrompt.brickCount].
+  final int? brickCount;
 
   /// Big emoji illustration (e.g. `🦁`) rendered ~64–80 px on a white card.
   final String? emoji;

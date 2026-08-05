@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/services/audio_service.dart';
-import '../../../core/theme/lp_colors.dart';
 import '../../../core/widgets/audio_button.dart';
 import '../../../core/widgets/option_tile.dart';
 import '../../../data/models/exercise.dart';
@@ -108,7 +107,11 @@ class _ListenChoosePageState extends State<ListenChoosePage> {
             const SizedBox(width: 16),
             Padding(
               padding: const EdgeInsets.only(bottom: 2),
-              child: _SnailButton(audioFile: exercise.audioFile),
+              child: AudioButton(
+                audioFile: exercise.audioFile,
+                variant: AudioButtonVariant.small,
+                rate: 0.6,
+              ),
             ),
           ],
         ),
@@ -151,60 +154,6 @@ class _ListenChoosePageState extends State<ListenChoosePage> {
         ),
         LessonContinueBar(onContinue: _solved ? widget.onAdvance : null),
       ],
-    );
-  }
-}
-
-/// Small white bordered square with a 🐌 — replays the clip at 0.6×.
-class _SnailButton extends StatefulWidget {
-  const _SnailButton({required this.audioFile});
-
-  final String audioFile;
-
-  @override
-  State<_SnailButton> createState() => _SnailButtonState();
-}
-
-class _SnailButtonState extends State<_SnailButton> {
-  static const Offset _shadowOffset = Offset(0, 3);
-
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: LessonStrings.slowPlaySemantics,
-      button: true,
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _pressed = true),
-        onTapCancel: () => setState(() => _pressed = false),
-        onTapUp: (_) {
-          setState(() => _pressed = false);
-          AudioService.instance.playAsset(widget.audioFile, rate: 0.6);
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 80),
-          width: 52,
-          height: 52,
-          alignment: Alignment.center,
-          transform: Matrix4.translationValues(
-            0,
-            _pressed ? _shadowOffset.dy : 0,
-            0,
-          ),
-          decoration: BoxDecoration(
-            color: LpColors.bgWhite,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: LpColors.ink, width: 2.5),
-            boxShadow: _pressed
-                ? null
-                : const <BoxShadow>[
-                    BoxShadow(color: LpColors.ink, offset: _shadowOffset),
-                  ],
-          ),
-          child: const Text('🐌', style: TextStyle(fontSize: 24, height: 1)),
-        ),
-      ),
     );
   }
 }

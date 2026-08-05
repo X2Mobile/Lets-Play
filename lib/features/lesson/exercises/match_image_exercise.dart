@@ -120,8 +120,8 @@ class _MatchImagePageState extends State<MatchImagePage> {
   }
 }
 
-/// White soft-bordered card with the big Arabic word, a small audio button
-/// and the blue tab peeking from below (prototype detail).
+/// White soft-bordered card with the big Arabic word and a small speaker
+/// button.
 class _WordCard extends StatelessWidget {
   const _WordCard({required this.exercise});
 
@@ -130,45 +130,28 @@ class _WordCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopIn(
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.bottomCenter,
-        children: <Widget>[
-          LpCard(
-            borderColor: LpColors.borderGray,
-            borderWidth: 1.5,
-            radius: 8,
-            shadowColor: LpColors.borderGray,
-            shadowOffset: const Offset(0, 5),
-            padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  exercise.word,
-                  textDirection: TextDirection.rtl,
-                  style: LpTextStyles.arabicLarge.copyWith(fontSize: 54),
-                ),
-                const SizedBox(width: 20),
-                AudioButton(
-                  audioFile: exercise.audioFile,
-                  variant: AudioButtonVariant.small,
-                ),
-              ],
+      child: LpCard(
+        borderColor: LpColors.borderGray,
+        borderWidth: 1.5,
+        radius: 8,
+        shadowColor: LpColors.borderGray,
+        shadowOffset: const Offset(0, 5),
+        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              exercise.word,
+              textDirection: TextDirection.rtl,
+              style: LpTextStyles.arabicLarge.copyWith(fontSize: 54),
             ),
-          ),
-          Positioned(
-            bottom: -17,
-            child: Container(
-              width: 10,
-              height: 30,
-              decoration: BoxDecoration(
-                color: LpColors.royalBlue,
-                borderRadius: BorderRadius.circular(5),
-              ),
+            const SizedBox(width: 20),
+            AudioButton(
+              audioFile: exercise.audioFile,
+              variant: AudioButtonVariant.small,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

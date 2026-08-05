@@ -58,19 +58,12 @@ const Lesson lessonFatha = Lesson(
       heading: 'Learn',
       titleArabic: 'كَ',
       titleLatin: 'KAF+a = Ka',
-      audioFile: 'ka_fatha.mp3',
-      cardColor: LpColors.levelOrange,
-    ),
-    TeachCardExercise(
-      heading: 'Learn',
-      titleArabic: 'لَ',
-      titleLatin: 'LAM+a = La',
-      audioFile: 'la_fatha.mp3',
+      audioFile: 'ka_fatha.m4a',
       cardColor: LpColors.levelOrange,
     ),
     ChoiceExercise(
       heading: 'Choose the pronunciation',
-      prompt: ChoicePrompt(arabic: 'كَ', audioFile: 'ka_fatha.mp3'),
+      prompt: ChoicePrompt(arabic: 'كَ', audioFile: 'ka_fatha.m4a'),
       options: <ExerciseOption>[
         ExerciseOption(label: 'Ka', isCorrect: true),
         ExerciseOption(label: 'Ki', isCorrect: false),
@@ -87,6 +80,14 @@ const Lesson lessonFatha = Lesson(
         ExerciseOption(label: 'Ta', isCorrect: true),
       ],
       columns: 3,
+    ),
+    // Hear it after picking it — the counterpart of the كَ card above.
+    TeachCardExercise(
+      heading: 'Learn',
+      titleArabic: 'تَ',
+      titleLatin: 'TAA+a = Ta',
+      audioFile: 'ta_fatha.m4a',
+      cardColor: LpColors.levelOrange,
     ),
     PlaceDiacriticExercise(
       baseGlyph: 'ك',

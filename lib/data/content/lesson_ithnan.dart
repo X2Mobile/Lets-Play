@@ -62,8 +62,10 @@ const Lesson lessonIthnan = Lesson(
         BrickPiece(columns: 2, rows: 5, color: LpColors.purple),
       ],
     ),
-    TutorialStep(line1: 'Form the number', line2: 'Using the blocks'),
-    BuildLetterExercise(
+    TutorialStep(line1: 'Drag the hand', line2: 'To form the number'),
+    // "Write the number": trace the brick numeral (bar right→left, then the
+    // stem top→bottom) — the drawing step, mirroring the letter lessons.
+    TraceLetterExercise(
       gridColumns: 9,
       gridRows: 9,
       slots: <Point<int>>[Point<int>(2, 1), Point<int>(2, 3)],
@@ -71,8 +73,16 @@ const Lesson lessonIthnan = Lesson(
         BrickPiece(columns: 6, rows: 2, color: LpColors.orange),
         BrickPiece(columns: 2, rows: 5, color: LpColors.purple),
       ],
-      timerSeconds: 30,
-      maxMoves: 10,
+      path: <Offset>[
+        Offset(0.82, 0.22),
+        Offset(0.62, 0.22),
+        Offset(0.42, 0.22),
+        Offset(0.33, 0.30),
+        Offset(0.33, 0.45),
+        Offset(0.33, 0.60),
+        Offset(0.33, 0.75),
+        Offset(0.33, 0.86),
+      ],
     ),
     CheckpointStep(title: 'Great Job Malak!', subtitle: "now let's test you"),
     ChoiceExercise(
@@ -97,8 +107,8 @@ const Lesson lessonIthnan = Lesson(
       heading: 'Match the image',
       prompt: ChoicePrompt(arabic: '٢', audioFile: 'ithnan_two.mp3'),
       options: <ExerciseOption>[
-        ExerciseOption(emoji: '🧱🧱', isCorrect: true),
-        ExerciseOption(emoji: '🧱', isCorrect: false),
+        ExerciseOption(brickCount: 2, isCorrect: true),
+        ExerciseOption(brickCount: 1, isCorrect: false),
       ],
       columns: 2,
     ),
@@ -122,27 +132,6 @@ const Lesson lessonIthnan = Lesson(
       ],
       columns: 2,
       letterTiles: true,
-    ),
-    // "Write the number": trace the brick numeral (bar right→left, then the
-    // stem top→bottom).
-    TraceLetterExercise(
-      gridColumns: 9,
-      gridRows: 9,
-      slots: <Point<int>>[Point<int>(2, 1), Point<int>(2, 3)],
-      pieces: <BrickPiece>[
-        BrickPiece(columns: 6, rows: 2, color: LpColors.orange),
-        BrickPiece(columns: 2, rows: 5, color: LpColors.purple),
-      ],
-      path: <Offset>[
-        Offset(0.82, 0.22),
-        Offset(0.62, 0.22),
-        Offset(0.42, 0.22),
-        Offset(0.33, 0.30),
-        Offset(0.33, 0.45),
-        Offset(0.33, 0.60),
-        Offset(0.33, 0.75),
-        Offset(0.33, 0.86),
-      ],
     ),
     RepeatAfterExercise(
       word: '٢',

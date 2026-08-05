@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/services/audio_service.dart';
 import '../../../core/theme/lp_colors.dart';
 import '../../../core/theme/lp_text_styles.dart';
 import '../../../data/models/exercise.dart';
@@ -35,23 +34,13 @@ class _PlaceDiacriticPageState extends State<PlaceDiacriticPage> {
   bool _solved = false;
   bool _wrongAbove = false;
   bool _wrongBelow = false;
-  Timer? _autoplayTimer;
   Timer? _wrongTimer;
 
-  @override
-  void initState() {
-    super.initState();
-    final audio = widget.exercise.audioFile;
-    if (audio != null) {
-      _autoplayTimer = Timer(const Duration(milliseconds: 380), () {
-        AudioService.instance.playAsset(audio);
-      });
-    }
-  }
+  // No audio here: the screen has no speaker button, and sound should only ever
+  // come from pressing one.
 
   @override
   void dispose() {
-    _autoplayTimer?.cancel();
     _wrongTimer?.cancel();
     super.dispose();
   }

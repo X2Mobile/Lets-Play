@@ -37,20 +37,18 @@ class _TraceLetterPageState extends State<TraceLetterPage>
   /// Cosmetic countdown, mirroring the build exercise chrome.
   static const int _timerStart = 30;
 
-  /// A jump longer than this (normalized) is a pen lift — e.g. hopping to
-  /// the dot of ب — and is not drawn as a connecting stroke.
-  static const double _liftThreshold = 0.3;
+  /// A hop longer than this many grid cells is a pen lift — e.g. jumping to
+  /// the dot of ب — and is not drawn as a connecting stroke. Measured in cells
+  /// rather than normalized units: a tall narrow letter like أ lives on a
+  /// 2 × 9 grid, where one cell sideways is half the normalized width and
+  /// would read as a huge jump. Consecutive waypoints within a stroke sit
+  /// under 2 cells apart; ب's dot is over 3.
+  static const double _liftThresholdCells = 2.5;
 
   late final AnimationController _pulse = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 850),
   )..repeat(reverse: true);
-
-  late final List<bool> _lifts = <bool>[
-    for (var i = 0; i < widget.exercise.path.length - 1; i++)
-      (widget.exercise.path[i + 1] - widget.exercise.path[i]).distance >
-          _liftThreshold,
-  ];
 
   int _reached = 0;
   Offset? _finger;
@@ -61,6 +59,7 @@ class _TraceLetterPageState extends State<TraceLetterPage>
 
   // Board-space data refreshed on every build (layout-derived, no setState).
   List<Offset> _points = const <Offset>[];
+  List<bool> _lifts = const <bool>[];
   double _hitRadius = 40;
 
   @override
@@ -148,6 +147,13 @@ class _TraceLetterPageState extends State<TraceLetterPage>
               _points = <Offset>[
                 for (final p in exercise.path)
                   Offset(p.dx * boardW, p.dy * boardH),
+              ];
+              // Pen lifts, judged on the board rather than in normalized space
+              // — see [_liftThresholdCells].
+              _lifts = <bool>[
+                for (var i = 0; i < _points.length - 1; i++)
+                  (_points[i + 1] - _points[i]).distance >
+                      cell * _liftThresholdCells,
               ];
               // Generous but below the waypoint spacing, so the finger has
               // to actually travel the stroke (no single-touch skips).

@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/lp_colors.dart';
 import '../../../core/theme/lp_text_styles.dart';
+import '../../../core/widgets/brick_widget.dart';
 import '../../../core/widgets/lp_button.dart';
 import '../../../core/widgets/lp_icons.dart';
 import '../../../core/widgets/option_tile.dart';
@@ -244,8 +245,9 @@ class CelebrationPop extends StatelessWidget {
   }
 }
 
-/// White option card with a big emoji illustration or an Arabic letter,
-/// including the correct/wrong flash + shake states from [OptionTile].
+/// White option card showing LEGO bricks, a big emoji illustration or an
+/// Arabic letter, including the correct/wrong flash + shake states from
+/// [OptionTile].
 class ExerciseOptionCard extends StatelessWidget {
   const ExerciseOptionCard({
     super.key,
@@ -262,7 +264,17 @@ class ExerciseOptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget content = option.emoji != null
+    final Widget content = option.brickCount != null
+        ? Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: List<Widget>.generate(
+              option.brickCount!,
+              (_) => const BrickWidget(color: LpColors.brandYellow, unit: 20),
+            ),
+          )
+        : option.emoji != null
         ? Text(
             option.emoji!,
             style: TextStyle(fontSize: emojiSize, height: 1.25),

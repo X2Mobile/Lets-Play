@@ -93,6 +93,7 @@ final class BuildLetterExercise extends Exercise {
     this.formTabs = const <String>[],
     this.activeFormIndex = 0,
     this.guideLabel,
+    this.baselineRow,
   });
 
   final int gridColumns;
@@ -104,14 +105,19 @@ final class BuildLetterExercise extends Exercise {
   final int timerSeconds;
   final int maxMoves;
 
-  /// Positional-form tabs above the board (design LEVEL 1/3: ا ا أ with the
-  /// active one green). Empty hides the row.
+  /// Positional-form tabs above the board (design LEVEL 1/3: أ ا ـا, laid out
+  /// RTL so `activeFormIndex` 0 is the rightmost, green tab). Empty hides the
+  /// row.
   final List<String> formTabs;
   final int activeFormIndex;
 
-  /// Draws a dotted green guide line under the board with this label
-  /// (`Baseline`, `Ascender`).
+  /// Draws a guide line labelled `Baseline` / `Ascender`.
   final String? guideLabel;
+
+  /// Grid row the guide line rests on — the line is drawn along that row's
+  /// **top** edge, so a letter ending at `baselineRow - 1` sits on it and the
+  /// remaining rows are plate below the line. Null draws it under the board.
+  final int? baselineRow;
 }
 
 /// 3. The letter is shown built from bricks; the child drags a finger along

@@ -194,7 +194,7 @@ class _BuildLetterPageState extends State<BuildLetterPage> {
                     Positioned(
                       left: 0,
                       right: 0,
-                      top: g.boardRect.bottom + 2,
+                      top: g.baselineY - _GuideLine.height / 2,
                       child: _GuideLine(label: _exercise.guideLabel!),
                     ),
                   // The letter: ghost slots + placed bricks (pops on finish).
@@ -365,59 +365,45 @@ class _FormTabsRow extends StatelessWidget {
   }
 }
 
-/// Dotted green guide line with a small label ("Baseline" / "Ascender").
+/// The letter's writing guide: a small dark label ("Baseline" / "Ascender")
+/// followed by a hairline rule running out to the edge of the plate. The rule
+/// is centred vertically in [height] so the caller can hang it off a grid row.
 class _GuideLine extends StatelessWidget {
   const _GuideLine({required this.label});
+
+  static const double height = 18;
 
   final String label;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 4, right: 4),
-          child: Text(
-            label,
-            style: const TextStyle(
-              fontFamily: 'BalooBhaijaan2',
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: LpColors.ink,
+    return SizedBox(
+      height: height,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: Row(
+          children: <Widget>[
+            Text(
+              label,
+              style: const TextStyle(
+                fontFamily: 'BalooBhaijaan2',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: LpColors.ink,
+              ),
             ),
-          ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Container(
+                height: 1.4,
+                color: LpColors.darken(LpColors.borderGray, 0.15),
+              ),
+            ),
+          ],
         ),
-        Expanded(
-          child: CustomPaint(
-            size: const Size(double.infinity, 3),
-            painter: _DottedGuidePainter(),
-          ),
-        ),
-      ],
+      ),
     );
   }
-}
-
-class _DottedGuidePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = LpColors.legoGreen
-      ..strokeWidth = 2.2
-      ..strokeCap = StrokeCap.round;
-    var x = 0.0;
-    while (x < size.width) {
-      canvas.drawLine(
-        Offset(x, size.height / 2),
-        Offset(math.min(x + 4, size.width), size.height / 2),
-        paint,
-      );
-      x += 9;
-    }
-  }
-
-  @override
-  bool shouldRepaint(_DottedGuidePainter oldDelegate) => false;
 }
 
 /// A tray brick the child can pick up. The drag feedback is rendered at
@@ -650,6 +636,11 @@ class _BuildGeometry {
           exercise.pieces[i].rows * cell,
         ),
     ];
+
+    final baselineRow = exercise.baselineRow;
+    baselineY = baselineRow != null
+        ? boardRect.top + baselineRow * cell
+        : boardRect.bottom + 2;
   }
 
   late final double cell;
@@ -657,4 +648,7 @@ class _BuildGeometry {
   late final Rect boardRect;
   late final List<Rect> trayRects;
   late final List<Rect> slotRects;
+
+  /// Y of the Baseline / Ascender rule, in stack coordinates.
+  late final double baselineY;
 }

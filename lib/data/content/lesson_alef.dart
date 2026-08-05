@@ -5,12 +5,37 @@ import '../../core/theme/lp_colors.dart';
 import '../models/exercise.dart';
 import '../models/lesson.dart';
 
+// Alef is 2 cells wide × 9 tall: a one-cell-wide orange stem standing on the
+// Baseline, carrying the red hamza hook that steps up and to the left —
+//
+//     . ▉        row 0     1×1 hamza tip (right cell)
+//     ▉ .        row 1     1×1 hamza elbow (left cell)
+//     ▉ ▉        row 2     2×1 hamza base
+//     . ▉        rows 3–8  1×6 stem, right cell, down to the Baseline
+//
+// All four bricks are placed by the child.
+
+/// Alef's bricks in slot order: hamza tip, hamza elbow, hamza base, stem.
+const List<BrickPiece> _alefPieces = <BrickPiece>[
+  BrickPiece(columns: 1, rows: 1, color: LpColors.crimson),
+  BrickPiece(columns: 1, rows: 1, color: LpColors.crimson),
+  BrickPiece(columns: 2, rows: 1, color: LpColors.crimson),
+  BrickPiece(columns: 1, rows: 6, color: LpColors.orange),
+];
+
+/// The whole letter on a tight 2 × 9 grid (press-reveal glyph, trace board),
+/// ordered to match [_alefPieces].
+const List<Point<int>> _alefTightSlots = <Point<int>>[
+  Point<int>(1, 0),
+  Point<int>(0, 1),
+  Point<int>(0, 2),
+  Point<int>(1, 3),
+];
+
 /// Level 1 · Lesson 1 — the letter Alef (design `LEVEL 1/0–29`): build the
 /// brick letter over the Baseline, press-to-reveal it, study its positional
 /// forms, trace it, then run the test battery (listen, true/false, speak,
-/// picture↔word matches and form-the-word). The letter is a tall vertical
-/// bar of stacked bricks with a hamza hook at the top-left, on a
-/// 6 columns × 8 rows grid.
+/// picture↔word matches and form-the-word).
 const Lesson lessonAlef = Lesson(
   id: 'lesson_alef',
   letterId: 'alef',
@@ -32,49 +57,38 @@ const Lesson lessonAlef = Lesson(
   speedLabel: '1:00',
   exercises: <Exercise>[
     TutorialStep(line1: 'Tap on the blocks', line2: 'To form the letter'),
-    // The hamza hook assembled on top of the stem, with the positional-form
-    // tabs and the Baseline guide (design LEVEL 1/3–6).
+    // The stem and the hamza hook dragged out of the tray, with the
+    // positional-form tabs and the Baseline guide (design LEVEL 1/3–6).
+    // The letter sits centred on cols 4–5, low on the plate: the stem's foot
+    // rests on row 11 so the Baseline (row 12) runs right along it.
     BuildLetterExercise(
-      gridColumns: 6,
-      gridRows: 8,
+      gridColumns: 11,
+      gridRows: 13,
       // pieces[i] snaps onto the slot whose top-left cell is slots[i].
       slots: <Point<int>>[
-        Point<int>(1, 1), // hamza hook, upper-left of the bar
-        Point<int>(2, 2), // bar top
-        Point<int>(2, 4), // bar middle
-        Point<int>(2, 6), // bar bottom
+        Point<int>(5, 3), // hamza tip
+        Point<int>(4, 4), // hamza elbow
+        Point<int>(4, 5), // hamza base
+        Point<int>(5, 6), // stem
       ],
-      pieces: <BrickPiece>[
-        BrickPiece(columns: 2, rows: 1, color: LpColors.royalBlue),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.brickRed),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.orange),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.legoGreen),
-      ],
+      pieces: _alefPieces,
       timerSeconds: 30,
-      maxMoves: 8,
-      formTabs: <String>['ا', 'ا', 'أ'],
-      activeFormIndex: 2,
+      maxMoves: 10,
+      // RTL row — index 0 is the rightmost tab, so أ leads and is the green one.
+      formTabs: <String>['أ', 'ا', 'ـا'],
+      activeFormIndex: 0,
       guideLabel: 'Baseline',
+      baselineRow: 12,
     ),
     PressRevealExercise(
       glyph: 'أ',
       nameArabic: 'ألف',
       nameLatin: 'Alef',
       audioFile: 'alef.mp3',
-      gridColumns: 6,
-      gridRows: 8,
-      slots: <Point<int>>[
-        Point<int>(1, 1),
-        Point<int>(2, 2),
-        Point<int>(2, 4),
-        Point<int>(2, 6),
-      ],
-      pieces: <BrickPiece>[
-        BrickPiece(columns: 2, rows: 1, color: LpColors.royalBlue),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.brickRed),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.orange),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.legoGreen),
-      ],
+      gridColumns: 2,
+      gridRows: 9,
+      slots: _alefTightSlots,
+      pieces: _alefPieces,
     ),
     // Alef doesn't connect forward, so initial = isolated and
     // medial = final (design LEVEL 1/9).
@@ -89,30 +103,20 @@ const Lesson lessonAlef = Lesson(
     ),
     TutorialStep(line1: 'Drag the hand', line2: 'To form the letter'),
     TraceLetterExercise(
-      gridColumns: 6,
-      gridRows: 8,
-      slots: <Point<int>>[
-        Point<int>(1, 1),
-        Point<int>(2, 2),
-        Point<int>(2, 4),
-        Point<int>(2, 6),
-      ],
-      pieces: <BrickPiece>[
-        BrickPiece(columns: 2, rows: 1, color: LpColors.royalBlue),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.brickRed),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.orange),
-        BrickPiece(columns: 2, rows: 2, color: LpColors.legoGreen),
-      ],
-      // Hamza flick first, then the bar drawn top → bottom.
+      gridColumns: 2,
+      gridRows: 9,
+      slots: _alefTightSlots,
+      pieces: _alefPieces,
+      // Hamza hook first (tip → elbow → base), then the stem top → bottom.
       path: <Offset>[
-        Offset(0.38, 0.12),
-        Offset(0.48, 0.16),
-        Offset(0.50, 0.24),
-        Offset(0.50, 0.38),
-        Offset(0.50, 0.52),
-        Offset(0.50, 0.66),
-        Offset(0.50, 0.80),
-        Offset(0.50, 0.90),
+        Offset(0.75, 0.06),
+        Offset(0.25, 0.17),
+        Offset(0.30, 0.28),
+        Offset(0.75, 0.28),
+        Offset(0.75, 0.44),
+        Offset(0.75, 0.61),
+        Offset(0.75, 0.78),
+        Offset(0.75, 0.94),
       ],
     ),
     CheckpointStep(title: 'Great Job Malak!', subtitle: "now let's test you"),

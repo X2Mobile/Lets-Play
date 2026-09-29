@@ -2,6 +2,29 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+/// The handwriting guide rules drawn across a brick plate (design: green
+/// Ascender, blue Baseline, red Descender).
+enum GuideKind {
+  ascender('Ascender'),
+  baseline('Baseline'),
+  descender('Descender');
+
+  const GuideKind(this.label);
+
+  final String label;
+}
+
+/// One guide rule, drawn along the **top** edge of grid [row] — so a letter
+/// ending at `row - 1` sits on it. A row equal to the grid's row count draws
+/// it along the bottom of the board.
+@immutable
+class LetterGuide {
+  const LetterGuide(this.kind, {required this.row});
+
+  final GuideKind kind;
+  final int row;
+}
+
 /// One answer choice in match / listen exercises.
 ///
 /// Exactly one of [brickCount] (that many real bricks), [emoji] (illustration
@@ -45,11 +68,17 @@ class BrickPiece {
     required this.columns,
     required this.rows,
     required this.color,
+    this.nudgeY = 0,
   });
 
   final int columns;
   final int rows;
   final Color color;
+
+  /// Draws the brick this fraction of a cell lower than its slot, so bricks
+  /// that only meet at a corner can overlap a little and read as one piece
+  /// (alef's hamza tip sits slightly into its elbow, as in the design).
+  final double nudgeY;
 }
 
 /// Base of every lesson step. Sealed so the lesson flow can exhaustively
@@ -99,8 +128,7 @@ final class BuildLetterExercise extends Exercise {
     this.maxMoves = 8,
     this.formTabs = const <String>[],
     this.activeFormIndex = 0,
-    this.guideLabel,
-    this.baselineRow,
+    this.guides = const <LetterGuide>[],
   });
 
   final int gridColumns;
@@ -118,13 +146,9 @@ final class BuildLetterExercise extends Exercise {
   final List<String> formTabs;
   final int activeFormIndex;
 
-  /// Draws a guide line labelled `Baseline` / `Ascender`.
-  final String? guideLabel;
-
-  /// Grid row the guide line rests on — the line is drawn along that row's
-  /// **top** edge, so a letter ending at `baselineRow - 1` sits on it and the
-  /// remaining rows are plate below the line. Null draws it under the board.
-  final int? baselineRow;
+  /// Handwriting guide rules across the plate (Ascender / Baseline /
+  /// Descender).
+  final List<LetterGuide> guides;
 }
 
 /// 3. The letter is shown built from bricks; the child drags a finger along
@@ -137,6 +161,7 @@ final class TraceLetterExercise extends Exercise {
     required this.slots,
     required this.pieces,
     required this.path,
+    this.strokeStarts = const <int>{},
   });
 
   final int gridColumns;
@@ -149,6 +174,11 @@ final class TraceLetterExercise extends Exercise {
 
   /// Normalized waypoints (x, y in 0..1) along the stroke, in order.
   final List<Offset> path;
+
+  /// Indices into [path] that start a new stroke (the pen lifts before
+  /// them) — e.g. alef's stem after its hamza, or the dot of ب. Every other
+  /// hop is drawn as part of the stroke, however long.
+  final Set<int> strokeStarts;
 }
 
 /// 4. "Match the image": Arabic word + audio, pick the right illustration.
@@ -210,6 +240,7 @@ final class TeachCardExercise extends Exercise {
     this.cardColor,
     this.items = const <TeachItem>[],
     this.imageAsset,
+    this.bricks,
   });
 
   /// Optional heading above the card (e.g. `Learn`).
@@ -227,6 +258,29 @@ final class TeachCardExercise extends Exercise {
   final Color? cardColor;
   final List<TeachItem> items;
   final String? imageAsset;
+
+  /// The mark / letter in bricks above the card, on its guide rules (design
+  /// LEVEL 2/7: the fatha stroke over the Ascender).
+  final BrickLayout? bricks;
+}
+
+/// A small brick drawing on a cell grid, with optional guide rules — same
+/// cell convention as [BuildLetterExercise].
+@immutable
+class BrickLayout {
+  const BrickLayout({
+    required this.gridColumns,
+    required this.gridRows,
+    required this.slots,
+    required this.pieces,
+    this.guides = const <LetterGuide>[],
+  });
+
+  final int gridColumns;
+  final int gridRows;
+  final List<Point<int>> slots;
+  final List<BrickPiece> pieces;
+  final List<LetterGuide> guides;
 }
 
 /// 7. Press-to-reveal flashcard: tapping the big glyph toggles between the

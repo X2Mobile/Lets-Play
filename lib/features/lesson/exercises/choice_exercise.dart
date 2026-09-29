@@ -87,6 +87,21 @@ class _ChoicePageState extends State<ChoicePage> {
     }
   }
 
+  /// What goes in the prompt's blank: the picked answer once solved, or the
+  /// wrong pick while it flashes red.
+  _BlankFill? get _blankFill {
+    final options = widget.exercise.options;
+    if (_solved) {
+      final correct = options.firstWhere((o) => o.isCorrect);
+      final text = correct.letter ?? correct.label;
+      return text == null ? null : _BlankFill(text, wrong: false);
+    }
+    final wrong = _wrongIndex;
+    if (wrong == null) return null;
+    final text = options[wrong].letter ?? options[wrong].label;
+    return text == null ? null : _BlankFill(text, wrong: true);
+  }
+
   OptionTileStatus _statusFor(int index) {
     if (_solved && widget.exercise.options[index].isCorrect) {
       return OptionTileStatus.correct;
@@ -128,7 +143,11 @@ class _ChoicePageState extends State<ChoicePage> {
             child: Column(
               children: <Widget>[
                 if (prompt != null) ...<Widget>[
-                  _PromptCard(prompt: prompt, levelColor: widget.levelColor),
+                  _PromptCard(
+                    prompt: prompt,
+                    levelColor: widget.levelColor,
+                    fill: _blankFill,
+                  ),
                   const SizedBox(height: 22),
                 ],
                 _OptionsGrid(
@@ -146,13 +165,55 @@ class _ChoicePageState extends State<ChoicePage> {
   }
 }
 
+/// A letter or word dropped into the prompt's blank (`...` / `....`).
+class _BlankFill {
+  const _BlankFill(this.text, {required this.wrong});
+
+  final String text;
+  final bool wrong;
+}
+
 /// Prompt card: Arabic text / image / emoji / brick count, with optional
 /// caption and inline audio.
 class _PromptCard extends StatelessWidget {
-  const _PromptCard({required this.prompt, required this.levelColor});
+  const _PromptCard({
+    required this.prompt,
+    required this.levelColor,
+    this.fill,
+  });
 
   final ChoicePrompt prompt;
   final Color levelColor;
+
+  /// Shown in place of the blank in [ChoicePrompt.arabic], if it has one.
+  final _BlankFill? fill;
+
+  /// The blank in a prompt such as `...سد` or `أمي .... الطعام`.
+  static final RegExp _blank = RegExp(r'\.{2,}|…');
+
+  /// The Arabic line, with [fill] in place of the blank — a wrong pick shows
+  /// faded and struck through (readable on every card colour).
+  InlineSpan _arabicSpan(String arabic, Color textColor) {
+    final fill = this.fill;
+    final match = fill == null ? null : _blank.firstMatch(arabic);
+    if (fill == null || match == null) return TextSpan(text: arabic);
+    return TextSpan(
+      children: <InlineSpan>[
+        TextSpan(text: arabic.substring(0, match.start)),
+        TextSpan(
+          text: fill.text,
+          style: fill.wrong
+              ? TextStyle(
+                  color: textColor.withValues(alpha: 0.45),
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: textColor,
+                )
+              : null,
+        ),
+        TextSpan(text: arabic.substring(match.end)),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +229,7 @@ class _PromptCard extends StatelessWidget {
         children: List<Widget>.generate(
           prompt.brickCount!,
           (i) => BrickWidget(
-            color: LpColors
-                .brickColors[i % LpColors.brickColors.length],
+            color: LpColors.brickColors[i % LpColors.brickColors.length],
             unit: 26,
           ),
         ),
@@ -195,17 +255,14 @@ class _PromptCard extends StatelessWidget {
               borderWidth: 3,
               shadowOffset: const Offset(0, 5),
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 18,
-                vertical: 20,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
               child: Column(
                 children: <Widget>[
                   ?content,
                   if (prompt.arabic != null) ...<Widget>[
                     if (content != null) const SizedBox(height: 10),
-                    Text(
-                      prompt.arabic!,
+                    Text.rich(
+                      _arabicSpan(prompt.arabic!, textColor),
                       textAlign: TextAlign.center,
                       textDirection: TextDirection.rtl,
                       style: LpTextStyles.arabicLarge.copyWith(
@@ -308,8 +365,7 @@ class _OptionsGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         const gap = 12.0;
-        final width =
-            (constraints.maxWidth - gap * (columns - 1)) / columns;
+        final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
         final hasVisual = options.any(
           (o) => o.imageAsset != null || o.emoji != null,
         );
@@ -355,8 +411,10 @@ class _OptionsGrid extends StatelessWidget {
             child: Image.asset(
               'assets/images/${option.imageAsset}',
               fit: BoxFit.contain,
-              errorBuilder: (_, _, _) =>
-                  Text(option.emoji ?? '🧱', style: const TextStyle(fontSize: 44)),
+              errorBuilder: (_, _, _) => Text(
+                option.emoji ?? '🧱',
+                style: const TextStyle(fontSize: 44),
+              ),
             ),
           ),
           if (option.label != null)

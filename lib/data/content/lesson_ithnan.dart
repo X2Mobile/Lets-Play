@@ -29,9 +29,11 @@ const Lesson lessonIthnan = Lesson(
     TutorialStep(line1: 'Tap on the blocks', line2: 'To form the number'),
     // The LEGO stylization of ٢: horizontal orange bar with the purple stem
     // descending from its left end (design LEVEL 3/3 and /10).
+    // Guide rules per the design: the Ascender under the bar, the stem's
+    // foot on the Baseline, the Descender a couple of rows lower.
     BuildLetterExercise(
       gridColumns: 9,
-      gridRows: 9,
+      gridRows: 10,
       slots: <Point<int>>[
         Point<int>(2, 1), // horizontal bar
         Point<int>(2, 3), // vertical stem below the bar's left end
@@ -42,6 +44,11 @@ const Lesson lessonIthnan = Lesson(
       ],
       timerSeconds: 30,
       maxMoves: 10,
+      guides: <LetterGuide>[
+        LetterGuide(GuideKind.ascender, row: 3),
+        LetterGuide(GuideKind.baseline, row: 8),
+        LetterGuide(GuideKind.descender, row: 10),
+      ],
     ),
     TeachCardExercise(
       titleArabic: 'اثنان',

@@ -6,13 +6,16 @@ import '../../../core/services/audio_service.dart';
 import '../../../core/theme/lp_colors.dart';
 import '../../../core/theme/lp_text_styles.dart';
 import '../../../core/widgets/audio_button.dart';
+import '../../../core/widgets/brick_glyph.dart';
+import '../../../core/widgets/guide_rule.dart';
 import '../../../core/widgets/lp_card.dart';
 import '../../../data/models/exercise.dart';
 import '../widgets/lesson_ui.dart';
 
 /// "Learn" card (design: fatha card, word-type / verb-type grammar cards):
 /// colored card with Arabic title + gloss, optional example rows with their
-/// own audio, optional illustration. CONTINUE enabled immediately.
+/// own audio, optional illustration, optional brick drawing on its guide
+/// rules above the card. CONTINUE enabled immediately.
 class TeachCardPage extends StatefulWidget {
   const TeachCardPage({
     super.key,
@@ -64,6 +67,10 @@ class _TeachCardPageState extends State<TeachCardPage> {
             padding: const EdgeInsets.fromLTRB(28, 16, 28, 8),
             child: Column(
               children: <Widget>[
+                if (exercise.bricks != null) ...<Widget>[
+                  PopIn(child: _BricksOnGuides(layout: exercise.bricks!)),
+                  const SizedBox(height: 20),
+                ],
                 PopIn(
                   child: LpCard(
                     color: color,
@@ -169,6 +176,47 @@ class _TeachCardPageState extends State<TeachCardPage> {
         ),
         LessonContinueBar(onContinue: widget.onAdvance),
       ],
+    );
+  }
+}
+
+/// A [BrickLayout] drawn centred, with its guide rules running the full width
+/// (design LEVEL 2/7: the fatha stroke sitting on the Ascender).
+class _BricksOnGuides extends StatelessWidget {
+  const _BricksOnGuides({required this.layout});
+
+  static const double _height = 110;
+
+  final BrickLayout layout;
+
+  @override
+  Widget build(BuildContext context) {
+    final unit = _height / layout.gridRows;
+    return SizedBox(
+      height: _height + GuideRule.height / 2,
+      width: double.infinity,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          for (final guide in layout.guides)
+            Positioned(
+              left: -18,
+              right: -18,
+              top: guide.row * unit - GuideRule.height / 2,
+              child: GuideRule(kind: guide.kind),
+            ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: BrickGlyph(
+              gridColumns: layout.gridColumns,
+              gridRows: layout.gridRows,
+              slots: layout.slots,
+              pieces: layout.pieces,
+              height: _height,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

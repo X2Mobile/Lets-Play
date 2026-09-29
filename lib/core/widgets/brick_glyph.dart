@@ -65,13 +65,17 @@ class _BrickGlyphPainter extends CustomPainter {
         canvas,
         Rect.fromLTWH(
           slot.x * unit,
-          slot.y * unit,
+          (slot.y + piece.nudgeY) * unit,
           piece.columns * unit,
           piece.rows * unit,
         ),
         color: piece.color,
         columns: piece.columns,
         rows: piece.rows,
+        // No black toy outline (matches the design): outlined bricks that
+        // only meet at a corner, like alef's hamza tip and elbow, read as
+        // two separate pieces with a gap between them.
+        outlined: false,
       );
     }
   }

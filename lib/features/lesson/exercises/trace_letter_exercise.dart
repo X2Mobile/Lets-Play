@@ -12,10 +12,11 @@ import '../../../state/app_state.dart';
 import '../widgets/lesson_ui.dart';
 
 /// Exercise 3 — trace the letter. The letter is rendered from bricks; a
-/// royal-blue rounded stroke advances along a predefined path while the
-/// finger stays within a generous radius of the next waypoint. A pulsing
-/// blue dot + white hand show where to go. Fully traced → pop →
-/// auto-advance. No fail state; retry just resets.
+/// royal-blue rounded stroke advances along a predefined path, densified to
+/// half-cell steps, so the finger has to travel the whole stroke. Straying
+/// off the letter snaps the current stroke back to its start (buzz + red
+/// flash). A pulsing blue dot + white hand show where to go. Fully traced →
+/// pop → auto-advance. No hearts are lost; retry just resets.
 class TraceLetterPage extends StatefulWidget {
   const TraceLetterPage({
     super.key,
@@ -37,13 +38,11 @@ class _TraceLetterPageState extends State<TraceLetterPage>
   /// Cosmetic countdown, mirroring the build exercise chrome.
   static const int _timerStart = 30;
 
-  /// A hop longer than this many grid cells is a pen lift — e.g. jumping to
-  /// the dot of ب — and is not drawn as a connecting stroke. Measured in cells
-  /// rather than normalized units: a tall narrow letter like أ lives on a
-  /// 2 × 9 grid, where one cell sideways is half the normalized width and
-  /// would read as a huge jump. Consecutive waypoints within a stroke sit
-  /// under 2 cells apart; ب's dot is over 3.
-  static const double _liftThresholdCells = 2.5;
+  /// Spacing of the densified waypoints, in cells.
+  static const double _stepCells = 0.5;
+
+  /// How many waypoints ahead a fast swipe may skip (≈ 3 cells).
+  static const int _lookahead = 6;
 
   late final AnimationController _pulse = AnimationController(
     vsync: this,
@@ -53,6 +52,14 @@ class _TraceLetterPageState extends State<TraceLetterPage>
   int _reached = 0;
   Offset? _finger;
   bool _done = false;
+
+  /// True while the finger is down and following the stroke — a touch that
+  /// lands away from the path doesn't draw until it reaches the next point.
+  bool _tracking = false;
+
+  /// Brief red flash after going off the letter.
+  bool _offTrack = false;
+  Timer? _offTrackTimer;
   int _secondsLeft = _timerStart;
   Timer? _ticker;
   Timer? _advanceTimer;
@@ -60,7 +67,8 @@ class _TraceLetterPageState extends State<TraceLetterPage>
   // Board-space data refreshed on every build (layout-derived, no setState).
   List<Offset> _points = const <Offset>[];
   List<bool> _lifts = const <bool>[];
-  double _hitRadius = 40;
+  double _hitRadius = 24;
+  double _offPathTolerance = 34;
 
   @override
   void initState() {
@@ -73,6 +81,7 @@ class _TraceLetterPageState extends State<TraceLetterPage>
     _pulse.dispose();
     _ticker?.cancel();
     _advanceTimer?.cancel();
+    _offTrackTimer?.cancel();
     super.dispose();
   }
 
@@ -89,24 +98,112 @@ class _TraceLetterPageState extends State<TraceLetterPage>
       _reached = 0;
       _finger = null;
       _done = false;
+      _tracking = false;
+      _offTrack = false;
       _secondsLeft = _timerStart;
     });
+    _offTrackTimer?.cancel();
     _startTicker();
   }
 
-  void _handleTouch(Offset local) {
-    if (_done || _points.isEmpty) return;
-    var advanced = false;
-    while (_reached < _points.length &&
-        (local - _points[_reached]).distance <= _hitRadius) {
-      _reached++;
-      advanced = true;
+  /// Index of the first waypoint of the stroke containing waypoint [i].
+  int _strokeStartOf(int i) {
+    var s = math.min(i, _points.length - 1);
+    while (s > 0 && !_lifts[s - 1]) {
+      s--;
     }
+    return s;
+  }
+
+  /// Last waypoint index of the stroke containing waypoint [i].
+  int _strokeEndOf(int i) {
+    var e = i;
+    while (e < _points.length - 1 && !_lifts[e]) {
+      e++;
+    }
+    return e;
+  }
+
+  /// Whether the next waypoint continues a stroke already under way (rather
+  /// than starting a new one after a pen lift).
+  bool get _midStroke => _reached > 0 && !_lifts[_reached - 1];
+
+  /// Distance from [p] to the stretch of the path around the next waypoint.
+  double _distanceToPath(Offset p) {
+    final end = math.min(_reached + _lookahead, _strokeEndOf(_reached));
+    var best = double.infinity;
+    for (var i = _reached; i <= end; i++) {
+      best = math.min(best, _distanceToSegment(p, _points[i - 1], _points[i]));
+    }
+    return best;
+  }
+
+  static double _distanceToSegment(Offset p, Offset a, Offset b) {
+    final ab = b - a;
+    final len2 = ab.distanceSquared;
+    if (len2 == 0) return (p - a).distance;
+    final t = (((p - a).dx * ab.dx + (p - a).dy * ab.dy) / len2).clamp(
+      0.0,
+      1.0,
+    );
+    return (p - (a + ab * t)).distance;
+  }
+
+  /// Furthest waypoint within reach of [p], at most [_lookahead] ahead and
+  /// never across a pen lift; null when none is.
+  int? _reachableFrom(Offset p) {
+    final end = math.min(_reached + _lookahead, _strokeEndOf(_reached));
+    int? hit;
+    for (var i = _reached; i <= end; i++) {
+      if ((p - _points[i]).distance <= _hitRadius) hit = i;
+    }
+    return hit;
+  }
+
+  void _handleTouch(Offset local) {
+    if (_done || _offTrack || _points.isEmpty) return;
+    if (!_tracking) {
+      // Start (or resume) only on the path: at the next waypoint, or on the
+      // part of the stroke already under way.
+      _tracking =
+          _reachableFrom(local) != null ||
+          (_midStroke && _distanceToPath(local) <= _offPathTolerance);
+      if (!_tracking) {
+        setState(() => _finger = null);
+        return;
+      }
+    } else if (_midStroke && _distanceToPath(local) > _offPathTolerance) {
+      _goOffTrack();
+      return;
+    }
+    final hit = _reachableFrom(local);
+    if (hit != null) _reached = hit + 1;
     setState(() => _finger = local);
-    if (advanced && _reached >= _points.length) _complete();
+    if (_reached >= _points.length) _complete();
+  }
+
+  /// The finger left the letter: the stroke flashes red, then the current
+  /// stroke starts over.
+  void _goOffTrack() {
+    HapticFeedback.heavyImpact();
+    _offTrackTimer?.cancel();
+    final restart = _strokeStartOf(_reached - 1);
+    setState(() {
+      _tracking = false;
+      _finger = null;
+      _offTrack = true;
+    });
+    _offTrackTimer = Timer(const Duration(milliseconds: 450), () {
+      if (!mounted) return;
+      setState(() {
+        _reached = restart;
+        _offTrack = false;
+      });
+    });
   }
 
   void _endTouch() {
+    _tracking = false;
     if (_finger != null) setState(() => _finger = null);
   }
 
@@ -144,20 +241,11 @@ class _TraceLetterPageState extends State<TraceLetterPage>
                   .clamp(18.0, 46.0);
               final boardW = cols * cell;
               final boardH = rows * cell;
-              _points = <Offset>[
-                for (final p in exercise.path)
-                  Offset(p.dx * boardW, p.dy * boardH),
-              ];
-              // Pen lifts, judged on the board rather than in normalized space
-              // — see [_liftThresholdCells].
-              _lifts = <bool>[
-                for (var i = 0; i < _points.length - 1; i++)
-                  (_points[i + 1] - _points[i]).distance >
-                      cell * _liftThresholdCells,
-              ];
-              // Generous but below the waypoint spacing, so the finger has
-              // to actually travel the stroke (no single-touch skips).
-              _hitRadius = math.max(36, cell * 0.95);
+              _densifyPath(exercise, boardW, boardH, cell);
+              // Tight enough that the finger has to follow the letter, loose
+              // enough for a small finger on a small board.
+              _hitRadius = math.max(20, cell * 0.6);
+              _offPathTolerance = math.max(28, cell * 0.9);
               final strokeWidth = math.min(16.0, math.max(12.0, cell * 0.35));
               final hint = _done
                   ? null
@@ -194,6 +282,7 @@ class _TraceLetterPageState extends State<TraceLetterPage>
                                 finger: _finger,
                                 lifts: _lifts,
                                 strokeWidth: strokeWidth,
+                                offTrack: _offTrack,
                               ),
                             ),
                           ),
@@ -217,6 +306,46 @@ class _TraceLetterPageState extends State<TraceLetterPage>
         ),
       ],
     );
+  }
+
+  /// Board-space waypoints from the exercise's normalized path, with extra
+  /// points every [_stepCells] cells along each stroke, plus the pen lifts
+  /// marked by `strokeStarts`. Lifts are never guessed from distance: a long
+  /// straight run like ب's base is one stroke with far-apart waypoints.
+  void _densifyPath(
+    TraceLetterExercise exercise,
+    double boardW,
+    double boardH,
+    double cell,
+  ) {
+    final raw = <Offset>[
+      for (final p in exercise.path) Offset(p.dx * boardW, p.dy * boardH),
+    ];
+    final points = <Offset>[];
+    final lifts = <bool>[];
+    for (var i = 0; i < raw.length; i++) {
+      if (i == 0) {
+        points.add(raw[0]);
+        continue;
+      }
+      final a = raw[i - 1];
+      final b = raw[i];
+      if (exercise.strokeStarts.contains(i)) {
+        lifts.add(true);
+        points.add(b);
+        continue;
+      }
+      final steps = math.max(
+        1,
+        ((b - a).distance / (cell * _stepCells)).ceil(),
+      );
+      for (var k = 1; k <= steps; k++) {
+        lifts.add(false);
+        points.add(Offset.lerp(a, b, k / steps)!);
+      }
+    }
+    _points = points;
+    _lifts = lifts;
   }
 
   /// Pulsing royal-blue dot on the next waypoint + a clean white hand chip.
@@ -292,7 +421,7 @@ class _LetterBricksPainter extends CustomPainter {
         canvas,
         Rect.fromLTWH(
           slot.x * cell,
-          slot.y * cell,
+          (slot.y + piece.nudgeY) * cell,
           piece.columns * cell,
           piece.rows * cell,
         ),
@@ -319,6 +448,7 @@ class _TraceStrokePainter extends CustomPainter {
     required this.finger,
     required this.lifts,
     required this.strokeWidth,
+    this.offTrack = false,
   });
 
   final List<Offset> points;
@@ -326,6 +456,9 @@ class _TraceStrokePainter extends CustomPainter {
   final Offset? finger;
   final List<bool> lifts;
   final double strokeWidth;
+
+  /// Tints the stroke red for a moment after the finger left the letter.
+  final bool offTrack;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -357,14 +490,15 @@ class _TraceStrokePainter extends CustomPainter {
       }
     }
 
+    final color = offTrack ? LpColors.crimson : LpColors.royalBlue;
     final stroke = Paint()
-      ..color = LpColors.royalBlue
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
     final core = Paint()
-      ..color = LpColors.lighten(LpColors.royalBlue, 0.35)
+      ..color = LpColors.lighten(color, 0.35)
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth * 0.34
       ..strokeCap = StrokeCap.round
@@ -376,7 +510,7 @@ class _TraceStrokePainter extends CustomPainter {
         canvas.drawCircle(
           run.first,
           strokeWidth * 0.55,
-          Paint()..color = LpColors.royalBlue,
+          Paint()..color = color,
         );
         canvas.drawCircle(
           run.first,
@@ -411,5 +545,6 @@ class _TraceStrokePainter extends CustomPainter {
       oldDelegate.reached != reached ||
       oldDelegate.finger != finger ||
       oldDelegate.strokeWidth != strokeWidth ||
+      oldDelegate.offTrack != offTrack ||
       oldDelegate.points != points;
 }

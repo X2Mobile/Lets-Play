@@ -76,12 +76,12 @@ const Lesson lessonFatha = Lesson(
       heading: 'Learn',
       titleArabic: 'كَ',
       titleLatin: 'KAF+a = Ka',
-      audioFile: 'ka_fatha.m4a',
+      audioFile: 'ka_fatha.mp3',
       cardColor: LpColors.levelOrange,
     ),
     ChoiceExercise(
       heading: 'Choose the pronunciation',
-      prompt: ChoicePrompt(arabic: 'كَ', audioFile: 'ka_fatha.m4a'),
+      prompt: ChoicePrompt(arabic: 'كَ', audioFile: 'ka_fatha.mp3'),
       options: <ExerciseOption>[
         ExerciseOption(label: 'Ka', isCorrect: true),
         ExerciseOption(label: 'Ki', isCorrect: false),
@@ -104,7 +104,7 @@ const Lesson lessonFatha = Lesson(
       heading: 'Learn',
       titleArabic: 'تَ',
       titleLatin: 'TAA+a = Ta',
-      audioFile: 'ta_fatha.m4a',
+      audioFile: 'ta_fatha.mp3',
       cardColor: LpColors.levelOrange,
     ),
     PlaceDiacriticExercise(

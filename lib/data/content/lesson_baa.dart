@@ -67,8 +67,9 @@ const Lesson lessonBaa = Lesson(
       timerSeconds: 30,
       maxMoves: 10,
       // RTL row — index 0 is the rightmost tab, so the form being built leads
-      // and is the green one. The final form ـب is the leftmost tab.
-      formTabs: <String>['ب', 'ـبـ', 'بـ', 'ـب'],
+      // and is the green one; then initial, medial, and the final form ـب as
+      // the leftmost tab.
+      formTabs: <String>['ب', 'بـ', 'ـبـ', 'ـب'],
       activeFormIndex: 0,
       guides: <LetterGuide>[LetterGuide(GuideKind.baseline, row: 4)],
     ),
@@ -106,18 +107,48 @@ const Lesson lessonBaa = Lesson(
       meaning: 'Duck',
       audioFile: 'batta_duck.mp3',
       options: <ExerciseOption>[
-        ExerciseOption(emoji: '🦆', label: 'Duck', isCorrect: true),
-        ExerciseOption(emoji: '🚪', label: 'Door', isCorrect: false),
-        ExerciseOption(emoji: '🐄', label: 'Cow', isCorrect: false),
+        ExerciseOption(
+          imageAsset: 'illustrations/duck.png',
+          emoji: '🦆',
+          label: 'Duck',
+          isCorrect: true,
+        ),
+        ExerciseOption(
+          imageAsset: 'illustrations/door.png',
+          emoji: '🚪',
+          label: 'Door',
+          isCorrect: false,
+        ),
+        ExerciseOption(
+          imageAsset: 'illustrations/cow.png',
+          emoji: '🐄',
+          label: 'Cow',
+          isCorrect: false,
+        ),
       ],
     ),
     ListenChooseExercise(
       // باب — door.
       audioFile: 'bab_door.mp3',
       options: <ExerciseOption>[
-        ExerciseOption(emoji: '🚪', label: 'Door', isCorrect: true),
-        ExerciseOption(emoji: '🦆', label: 'Duck', isCorrect: false),
-        ExerciseOption(emoji: '🐄', label: 'Cow', isCorrect: false),
+        ExerciseOption(
+          imageAsset: 'illustrations/door.png',
+          emoji: '🚪',
+          label: 'Door',
+          isCorrect: true,
+        ),
+        ExerciseOption(
+          imageAsset: 'illustrations/duck.png',
+          emoji: '🦆',
+          label: 'Duck',
+          isCorrect: false,
+        ),
+        ExerciseOption(
+          imageAsset: 'illustrations/cow.png',
+          emoji: '🐄',
+          label: 'Cow',
+          isCorrect: false,
+        ),
         ExerciseOption(letter: 'ب', isCorrect: false),
       ],
     ),

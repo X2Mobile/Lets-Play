@@ -29,7 +29,8 @@ class LetterGuide {
 ///
 /// Exactly one of [brickCount] (that many real bricks), [emoji] (illustration
 /// placeholder), [imageAsset] (bundled illustration) or [letter] (Arabic
-/// letter card) should be set.
+/// letter card) should be set — except that an [emoji] may ride along with
+/// an [imageAsset] as its fallback.
 @immutable
 class ExerciseOption {
   const ExerciseOption({

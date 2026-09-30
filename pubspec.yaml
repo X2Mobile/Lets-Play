@@ -2,7 +2,7 @@ name: lets_play
 description: "LET'S PLAY! (يلا نلعب) — gamified Arabic literacy for kids. Offline content, with Firebase Analytics usage tracking."
 publish_to: 'none'
 
-version: 1.0.0+3
+version: 1.0.0+4
 
 environment:
   sdk: ^3.12.2

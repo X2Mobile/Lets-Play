@@ -44,7 +44,8 @@ const Lesson lessonFatha = Lesson(
       ],
       timerSeconds: 30,
       maxMoves: 10,
-      guideLabel: 'Ascender',
+      // The bottom step rests on the Ascender (top of row 6).
+      guides: <LetterGuide>[LetterGuide(GuideKind.ascender, row: 6)],
     ),
     TeachCardExercise(
       titleArabic: 'فتحه',
@@ -52,18 +53,35 @@ const Lesson lessonFatha = Lesson(
       subtitle: 'Letter+a',
       audioFile: 'fatha.mp3',
       cardColor: LpColors.levelOrange,
+      // The built stroke on its Ascender line, above the card (design
+      // LEVEL 2/7).
+      bricks: BrickLayout(
+        gridColumns: 6,
+        gridRows: 4,
+        slots: <Point<int>>[
+          Point<int>(0, 2),
+          Point<int>(2, 1),
+          Point<int>(4, 0),
+        ],
+        pieces: <BrickPiece>[
+          BrickPiece(columns: 2, rows: 2, color: LpColors.levelOrange),
+          BrickPiece(columns: 2, rows: 2, color: LpColors.levelOrange),
+          BrickPiece(columns: 2, rows: 2, color: LpColors.levelOrange),
+        ],
+        guides: <LetterGuide>[LetterGuide(GuideKind.ascender, row: 4)],
+      ),
     ),
     CheckpointStep(title: 'Great Job Malak!', subtitle: "now let's test you"),
     TeachCardExercise(
       heading: 'Learn',
       titleArabic: 'كَ',
       titleLatin: 'KAF+a = Ka',
-      audioFile: 'ka_fatha.m4a',
+      audioFile: 'ka_fatha.mp3',
       cardColor: LpColors.levelOrange,
     ),
     ChoiceExercise(
       heading: 'Choose the pronunciation',
-      prompt: ChoicePrompt(arabic: 'كَ', audioFile: 'ka_fatha.m4a'),
+      prompt: ChoicePrompt(arabic: 'كَ', audioFile: 'ka_fatha.mp3'),
       options: <ExerciseOption>[
         ExerciseOption(label: 'Ka', isCorrect: true),
         ExerciseOption(label: 'Ki', isCorrect: false),
@@ -86,7 +104,7 @@ const Lesson lessonFatha = Lesson(
       heading: 'Learn',
       titleArabic: 'تَ',
       titleLatin: 'TAA+a = Ta',
-      audioFile: 'ta_fatha.m4a',
+      audioFile: 'ta_fatha.mp3',
       cardColor: LpColors.levelOrange,
     ),
     PlaceDiacriticExercise(

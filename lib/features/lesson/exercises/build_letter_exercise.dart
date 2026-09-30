@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/lp_colors.dart';
 import '../../../core/widgets/baseplate_background.dart';
 import '../../../core/widgets/brick_widget.dart';
+import '../../../core/widgets/guide_rule.dart';
 import '../../../data/models/exercise.dart';
 import '../../../state/app_state.dart';
 import '../widgets/lesson_ui.dart';
@@ -190,12 +191,12 @@ class _BuildLetterPageState extends State<BuildLetterPage> {
                 clipBehavior: Clip.none,
                 children: <Widget>[
                   const Positioned.fill(child: BaseplateBackground()),
-                  if (_exercise.guideLabel != null)
+                  for (final guide in _exercise.guides)
                     Positioned(
                       left: 0,
                       right: 0,
-                      top: g.baselineY - _GuideLine.height / 2,
-                      child: _GuideLine(label: _exercise.guideLabel!),
+                      top: g.guideY(guide) - GuideRule.height / 2,
+                      child: GuideRule(kind: guide.kind),
                     ),
                   // The letter: ghost slots + placed bricks (pops on finish).
                   Positioned.fromRect(
@@ -365,47 +366,6 @@ class _FormTabsRow extends StatelessWidget {
   }
 }
 
-/// The letter's writing guide: a small dark label ("Baseline" / "Ascender")
-/// followed by a hairline rule running out to the edge of the plate. The rule
-/// is centred vertically in [height] so the caller can hang it off a grid row.
-class _GuideLine extends StatelessWidget {
-  const _GuideLine({required this.label});
-
-  static const double height = 18;
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        child: Row(
-          children: <Widget>[
-            Text(
-              label,
-              style: const TextStyle(
-                fontFamily: 'BalooBhaijaan2',
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: LpColors.ink,
-              ),
-            ),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Container(
-                height: 1.4,
-                color: LpColors.darken(LpColors.borderGray, 0.15),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// A tray brick the child can pick up. The drag feedback is rendered at
 /// board size so it visually matches the slot it is about to fill.
 class _TrayDraggable extends StatelessWidget {
@@ -564,7 +524,7 @@ class _GhostSlotsPainter extends CustomPainter {
         for (var cx = 0; cx < piece.columns; cx++) {
           final rect = Rect.fromLTWH(
             (slot.x + cx) * cell,
-            (slot.y + cy) * cell,
+            (slot.y + cy + piece.nudgeY) * cell,
             cell,
             cell,
           ).deflate(1);
@@ -631,16 +591,11 @@ class _BuildGeometry {
       for (var i = 0; i < exercise.slots.length; i++)
         Rect.fromLTWH(
           boardLeft + exercise.slots[i].x * cell,
-          boardTop + exercise.slots[i].y * cell,
+          boardTop + (exercise.slots[i].y + exercise.pieces[i].nudgeY) * cell,
           exercise.pieces[i].columns * cell,
           exercise.pieces[i].rows * cell,
         ),
     ];
-
-    final baselineRow = exercise.baselineRow;
-    baselineY = baselineRow != null
-        ? boardRect.top + baselineRow * cell
-        : boardRect.bottom + 2;
   }
 
   late final double cell;
@@ -649,6 +604,6 @@ class _BuildGeometry {
   late final List<Rect> trayRects;
   late final List<Rect> slotRects;
 
-  /// Y of the Baseline / Ascender rule, in stack coordinates.
-  late final double baselineY;
+  /// Y of a guide rule (the top edge of its row), in stack coordinates.
+  double guideY(LetterGuide guide) => boardRect.top + guide.row * cell;
 }

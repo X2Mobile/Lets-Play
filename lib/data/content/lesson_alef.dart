@@ -5,31 +5,36 @@ import '../../core/theme/lp_colors.dart';
 import '../models/exercise.dart';
 import '../models/lesson.dart';
 
-// Alef is 2 cells wide × 9 tall: a one-cell-wide orange stem standing on the
-// Baseline, carrying the red hamza hook that steps up and to the left —
+// Alef is 2 cells wide × 10 tall: a one-cell-wide orange stem standing on the
+// Baseline, with the red hamza hook floating above it, stepping up and to the
+// left. The hamza is written separately, so a one-row gap splits it from the
+// stem (client amends, Sep 2026) —
 //
-//     . ▉        row 0     1×1 hamza tip (right cell)
+//     . ▉        row 0     1×1 hamza tip (right cell), drawn a quarter cell
+//                          low so it joins the elbow instead of touching
+//                          it only at a corner
 //     ▉ .        row 1     1×1 hamza elbow (left cell)
 //     ▉ ▉        row 2     2×1 hamza base
-//     . ▉        rows 3–8  1×6 stem, right cell, down to the Baseline
+//     . .        row 3     gap
+//     . ▉        rows 4–9  1×6 stem, right cell, down to the Baseline
 //
 // All four bricks are placed by the child.
 
 /// Alef's bricks in slot order: hamza tip, hamza elbow, hamza base, stem.
 const List<BrickPiece> _alefPieces = <BrickPiece>[
-  BrickPiece(columns: 1, rows: 1, color: LpColors.crimson),
+  BrickPiece(columns: 1, rows: 1, color: LpColors.crimson, nudgeY: 0.25),
   BrickPiece(columns: 1, rows: 1, color: LpColors.crimson),
   BrickPiece(columns: 2, rows: 1, color: LpColors.crimson),
   BrickPiece(columns: 1, rows: 6, color: LpColors.orange),
 ];
 
-/// The whole letter on a tight 2 × 9 grid (press-reveal glyph, trace board),
+/// The whole letter on a tight 2 × 10 grid (press-reveal glyph, trace board),
 /// ordered to match [_alefPieces].
 const List<Point<int>> _alefTightSlots = <Point<int>>[
   Point<int>(1, 0),
   Point<int>(0, 1),
   Point<int>(0, 2),
-  Point<int>(1, 3),
+  Point<int>(1, 4),
 ];
 
 /// Level 1 · Lesson 1 — the letter Alef (design `LEVEL 1/0–29`): build the
@@ -66,10 +71,10 @@ const Lesson lessonAlef = Lesson(
       gridRows: 13,
       // pieces[i] snaps onto the slot whose top-left cell is slots[i].
       slots: <Point<int>>[
-        Point<int>(5, 3), // hamza tip
-        Point<int>(4, 4), // hamza elbow
-        Point<int>(4, 5), // hamza base
-        Point<int>(5, 6), // stem
+        Point<int>(5, 2), // hamza tip
+        Point<int>(4, 3), // hamza elbow
+        Point<int>(4, 4), // hamza base
+        Point<int>(5, 6), // stem — row 5 is the gap under the hamza
       ],
       pieces: _alefPieces,
       timerSeconds: 30,
@@ -77,8 +82,7 @@ const Lesson lessonAlef = Lesson(
       // RTL row — index 0 is the rightmost tab, so أ leads and is the green one.
       formTabs: <String>['أ', 'ا', 'ـا'],
       activeFormIndex: 0,
-      guideLabel: 'Baseline',
-      baselineRow: 12,
+      guides: <LetterGuide>[LetterGuide(GuideKind.baseline, row: 12)],
     ),
     PressRevealExercise(
       glyph: 'أ',
@@ -86,7 +90,7 @@ const Lesson lessonAlef = Lesson(
       nameLatin: 'Alef',
       audioFile: 'alef.mp3',
       gridColumns: 2,
-      gridRows: 9,
+      gridRows: 10,
       slots: _alefTightSlots,
       pieces: _alefPieces,
     ),
@@ -104,20 +108,22 @@ const Lesson lessonAlef = Lesson(
     TutorialStep(line1: 'Drag the hand', line2: 'To form the letter'),
     TraceLetterExercise(
       gridColumns: 2,
-      gridRows: 9,
+      gridRows: 10,
       slots: _alefTightSlots,
       pieces: _alefPieces,
       // Hamza hook first (tip → elbow → base), then the stem top → bottom.
+      // Normalized to the 2 × 10 board: y = (row + 0.5) / 10.
       path: <Offset>[
-        Offset(0.75, 0.06),
-        Offset(0.25, 0.17),
-        Offset(0.30, 0.28),
-        Offset(0.75, 0.28),
-        Offset(0.75, 0.44),
-        Offset(0.75, 0.61),
-        Offset(0.75, 0.78),
-        Offset(0.75, 0.94),
+        Offset(0.75, 0.05),
+        Offset(0.25, 0.15),
+        Offset(0.30, 0.25),
+        Offset(0.75, 0.25),
+        Offset(0.75, 0.45), // pen lift over the gap to the stem
+        Offset(0.75, 0.60),
+        Offset(0.75, 0.75),
+        Offset(0.75, 0.95),
       ],
+      strokeStarts: <int>{4},
     ),
     CheckpointStep(title: 'Great Job Malak!', subtitle: "now let's test you"),
     ChoiceExercise(

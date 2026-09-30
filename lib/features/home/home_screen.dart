@@ -394,10 +394,16 @@ class _GlyphTileState extends State<_GlyphTile> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          // A taller line than tileLetter's so descending dots (ي, ج) clear
+          // the transliteration instead of printing over it — "y" under ي
+          // read as a different letter (client amends, Sep 2026).
           Text(
             widget.glyph,
             textDirection: TextDirection.rtl,
-            style: LpTextStyles.tileLetter.copyWith(color: glyphColor),
+            style: LpTextStyles.tileLetter.copyWith(
+              color: glyphColor,
+              height: 1.5,
+            ),
           ),
           Text(
             widget.translit,

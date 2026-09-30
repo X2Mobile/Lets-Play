@@ -57,12 +57,12 @@ const Lesson lessonGreetings = Lesson(
         ExerciseOption(letter: 'مساء الخير', isCorrect: false),
       ],
     ),
-    // أهلاً صباح الخير (design LEVEL 5/5–8); sabah_alkhair.mp3 is the
-    // closest bundled clip.
+    // صباح الخير — the design's أهلاً صباح الخير (LEVEL 5/5–8) minus أهلاً,
+    // which sabah_alkhair.mp3 doesn't say (client amends, Sep 2026).
     FormSentenceExercise(
       heading: 'Form the sentence',
       audioFile: 'sabah_alkhair.mp3',
-      words: <String>['أهلاً', 'صباح', 'الخير'],
+      words: <String>['صباح', 'الخير'],
     ),
     ChoiceExercise(
       heading: 'Complete the sentence',

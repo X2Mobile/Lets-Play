@@ -245,8 +245,8 @@ class CelebrationPop extends StatelessWidget {
   }
 }
 
-/// White option card showing LEGO bricks, a big emoji illustration or an
-/// Arabic letter, including the correct/wrong flash + shake states from
+/// White option card showing LEGO bricks, an illustration (or its emoji
+/// placeholder) or an Arabic letter, including the correct/wrong flash + shake states from
 /// [OptionTile].
 class ExerciseOptionCard extends StatelessWidget {
   const ExerciseOptionCard({
@@ -264,6 +264,25 @@ class ExerciseOptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final image = option.imageAsset;
+    if (image != null) {
+      return OptionTile(
+        status: status,
+        onTap: onTap,
+        padding: const EdgeInsets.all(12),
+        child: Center(
+          child: Image.asset(
+            'assets/images/$image',
+            fit: BoxFit.contain,
+            // Falls back to the emoji placeholder if the asset is missing.
+            errorBuilder: (_, _, _) => Text(
+              option.emoji ?? '',
+              style: TextStyle(fontSize: emojiSize, height: 1.25),
+            ),
+          ),
+        ),
+      );
+    }
     final Widget content = option.brickCount != null
         ? Wrap(
             spacing: 8,

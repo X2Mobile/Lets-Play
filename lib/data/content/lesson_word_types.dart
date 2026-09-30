@@ -37,8 +37,16 @@ const Lesson lessonWordTypes = Lesson(
           gloss: '(Noun) = (Man)',
           audioFile: 'rajul_man.mp3',
         ),
-        TeachItem(arabic: 'فعل = يسبح', gloss: '(Verb) = (Swims)'),
-        TeachItem(arabic: 'حرف = في', gloss: '(Particle) = (In)'),
+        TeachItem(
+          arabic: 'فعل = يسبح',
+          gloss: '(Verb) = (Swims)',
+          audioFile: 'yasbah_swims.mp3',
+        ),
+        TeachItem(
+          arabic: 'حرف = في',
+          gloss: '(Particle) = (In)',
+          audioFile: 'fi_in.mp3',
+        ),
       ],
     ),
     // Tap all the nouns in the six-word grid (design 3).

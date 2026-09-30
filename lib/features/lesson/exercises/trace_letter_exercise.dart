@@ -15,7 +15,8 @@ import '../widgets/lesson_ui.dart';
 /// royal-blue rounded stroke advances along a predefined path, densified to
 /// half-cell steps, so the finger has to travel the whole stroke. Straying
 /// off the letter snaps the current stroke back to its start (buzz + red
-/// flash). A pulsing blue dot + white hand show where to go. Fully traced →
+/// flash). Chevron arrows along the untraced path show which way to go, and
+/// a pulsing blue dot + white hand mark the next point. Fully traced →
 /// pop → auto-advance. No hearts are lost; retry just resets.
 class TraceLetterPage extends StatefulWidget {
   const TraceLetterPage({
@@ -274,6 +275,17 @@ class _TraceLetterPageState extends State<TraceLetterPage>
                               ),
                             ),
                           ),
+                          if (!_done)
+                            Positioned.fill(
+                              child: CustomPaint(
+                                painter: _GuideArrowsPainter(
+                                  points: _points,
+                                  lifts: _lifts,
+                                  reached: _reached,
+                                  cell: cell,
+                                ),
+                              ),
+                            ),
                           Positioned.fill(
                             child: CustomPaint(
                               painter: _TraceStrokePainter(
@@ -436,6 +448,98 @@ class _LetterBricksPainter extends CustomPainter {
   @override
   bool shouldRepaint(_LetterBricksPainter oldDelegate) =>
       oldDelegate.cell != cell || oldDelegate.exercise != exercise;
+}
+
+/// Direction chevrons along the part of the path still to trace, one every
+/// [_spacingCells] cells, pointing the way the finger should move. Arrows on
+/// the stroke under way are strong; later strokes are fainter. Ink with a
+/// white halo so they read on both the plate and any brick colour.
+class _GuideArrowsPainter extends CustomPainter {
+  const _GuideArrowsPainter({
+    required this.points,
+    required this.lifts,
+    required this.reached,
+    required this.cell,
+  });
+
+  static const double _spacingCells = 1.25;
+
+  final List<Offset> points;
+  final List<bool> lifts;
+  final int reached;
+  final double cell;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (points.length < 2) return;
+    final spacing = cell * _spacingCells;
+    final arrowSize = cell * 0.22;
+    final halo = Paint()
+      ..color = LpColors.bgWhite.withValues(alpha: 0.9)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = math.max(5.0, cell * 0.16)
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    final ink = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = math.max(2.4, cell * 0.075)
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    // The stroke under way is the one holding the next waypoint.
+    var stroke = 0;
+    var currentStroke = 0;
+    for (var i = 1; i <= reached && i < points.length; i++) {
+      if (lifts[i - 1]) currentStroke++;
+    }
+
+    // Start half a spacing in, so no arrow sits on a stroke's first point.
+    var untilNext = spacing / 2;
+    for (var i = 1; i < points.length; i++) {
+      if (lifts[i - 1]) {
+        stroke++;
+        untilNext = spacing / 2;
+        continue;
+      }
+      final a = points[i - 1];
+      final b = points[i];
+      final length = (b - a).distance;
+      if (length == 0) continue;
+      final dir = (b - a) / length;
+      var along = 0.0;
+      while (along + untilNext <= length) {
+        along += untilNext;
+        untilNext = spacing;
+        // Skip what the finger has already covered.
+        if (i < reached) continue;
+        final strong = stroke == currentStroke;
+        ink.color = LpColors.ink.withValues(alpha: strong ? 0.8 : 0.3);
+        halo.color = LpColors.bgWhite.withValues(alpha: strong ? 0.9 : 0.5);
+        final path = _chevron(a + dir * along, dir, arrowSize);
+        canvas.drawPath(path, halo);
+        canvas.drawPath(path, ink);
+      }
+      untilNext -= length - along;
+    }
+  }
+
+  /// A ">" pointing along [dir], its tip at [tip].
+  static Path _chevron(Offset tip, Offset dir, double size) {
+    final perp = Offset(-dir.dy, dir.dx);
+    final back = tip - dir * size;
+    final left = back + perp * size;
+    final right = back - perp * size;
+    return Path()
+      ..moveTo(left.dx, left.dy)
+      ..lineTo(tip.dx, tip.dy)
+      ..lineTo(right.dx, right.dy);
+  }
+
+  @override
+  bool shouldRepaint(_GuideArrowsPainter oldDelegate) =>
+      oldDelegate.reached != reached ||
+      oldDelegate.cell != cell ||
+      oldDelegate.points != points;
 }
 
 /// The royal-blue tracing stroke: smoothed polyline through the reached

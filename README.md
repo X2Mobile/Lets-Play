@@ -229,3 +229,17 @@ lib/
   borders, brand palette, custom-painted bricks/icons. No stock Material widgets.
 - `flutter analyze` is clean; web release build compiles; the app runs on
   iOS / Android / web. Firebase pushes the iOS minimum to **15.0** (was 13.0).
+
+---
+
+## Software Bill of Materials
+
+[`sbom.spdx.json`](sbom.spdx.json) (SPDX 2.3) lists every library that ships in the
+app, with its version and declared license: 80 Dart packages, 97 Android libraries and
+13 iOS Swift packages. Dev/test-only packages are left out.
+
+Everything is open source (MIT, BSD-3-Clause, Apache-2.0, Zlib) except Google's
+closed-source analytics binaries, which all come in through **Firebase Analytics**:
+the `play-services-*` and `firebase-analytics` libraries on Android, and
+`GoogleAppMeasurement` / `google-ads-on-device-conversion-ios-sdk` on iOS. Replacing
+Firebase Analytics with an open-source analytics tool would remove them.
